@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.calculator.CalculatorTest$UserMultiplicationTests" time="0.018" tests="57" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.calculator.CalculatorTest$UserMultiplicationTests" time="0.022" tests="57" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="22"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -16,7 +16,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="C:\Program Files\OpenJDK\jdk-22.0.2\bin"/>
-    <property name="sun.java.command" value="C:\Users\Olga\AppData\Local\Temp\surefire5723550064574534984\surefirebooter-20250912114320348_3.jar C:\Users\Olga\AppData\Local\Temp\surefire5723550064574534984 2025-09-12T11-43-20_227-jvmRun1 surefire-20250912114320348_1tmp surefire_0-20250912114320348_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\Olga\AppData\Local\Temp\surefire11289847871768586947\surefirebooter-20250912115126566_3.jar C:\Users\Olga\AppData\Local\Temp\surefire11289847871768586947 2025-09-12T11-51-26_427-jvmRun1 surefire-20250912115126566_1tmp surefire_0-20250912115126566_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\Olga\VisualCode projects\Calculator-1\target\test-classes;C:\Users\Olga\VisualCode projects\Calculator-1\target\classes;C:\Users\Olga\.m2\repository\org\junit\jupiter\junit-jupiter\5.9.2\junit-jupiter-5.9.2.jar;C:\Users\Olga\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.9.2\junit-jupiter-api-5.9.2.jar;C:\Users\Olga\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;C:\Users\Olga\.m2\repository\org\junit\platform\junit-platform-commons\1.9.2\junit-platform-commons-1.9.2.jar;C:\Users\Olga\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Olga\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.9.2\junit-jupiter-params-5.9.2.jar;C:\Users\Olga\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.9.2\junit-jupiter-engine-5.9.2.jar;C:\Users\Olga\.m2\repository\org\junit\platform\junit-platform-engine\1.9.2\junit-platform-engine-1.9.2.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -31,7 +31,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\Olga\AppData\Local\Temp\surefire5723550064574534984\surefirebooter-20250912114320348_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\Olga\AppData\Local\Temp\surefire11289847871768586947\surefirebooter-20250912115126566_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="22.0.2+9-70"/>
@@ -60,61 +60,61 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="66.0"/>
   </properties>
-  <testcase name="testRoundNegativePlaces" classname="com.calculator.CalculatorTest" time="0.046"/>
-  <testcase name="testAbsolute(double, double)[1]" classname="com.calculator.CalculatorTest" time="0.036"/>
+  <testcase name="testRoundNegativePlaces" classname="com.calculator.CalculatorTest" time="0.042"/>
+  <testcase name="testAbsolute(double, double)[1]" classname="com.calculator.CalculatorTest" time="0.035"/>
   <testcase name="testAbsolute(double, double)[2]" classname="com.calculator.CalculatorTest" time="0.001"/>
   <testcase name="testAbsolute(double, double)[3]" classname="com.calculator.CalculatorTest" time="0.001"/>
   <testcase name="testPercentage(double, double, double)[1]" classname="com.calculator.CalculatorTest" time="0.006"/>
   <testcase name="testPercentage(double, double, double)[2]" classname="com.calculator.CalculatorTest" time="0.001"/>
-  <testcase name="testPercentage(double, double, double)[3]" classname="com.calculator.CalculatorTest" time="0.001"/>
+  <testcase name="testPercentage(double, double, double)[3]" classname="com.calculator.CalculatorTest" time="0.002"/>
   <testcase name="testDivideByZero" classname="com.calculator.CalculatorTest" time="0.002"/>
   <testcase name="testFormatResult" classname="com.calculator.CalculatorTest" time="0.001"/>
   <testcase name="testSubtract(double, double, double)[1]" classname="com.calculator.CalculatorTest" time="0.001"/>
   <testcase name="testSubtract(double, double, double)[2]" classname="com.calculator.CalculatorTest" time="0.001"/>
   <testcase name="testSubtract(double, double, double)[3]" classname="com.calculator.CalculatorTest" time="0.002"/>
-  <testcase name="testSquareRootNegative" classname="com.calculator.CalculatorTest" time="0.001"/>
-  <testcase name="testPower(double, double, double)[1]" classname="com.calculator.CalculatorTest" time="0.002"/>
+  <testcase name="testSquareRootNegative" classname="com.calculator.CalculatorTest" time="0.002"/>
+  <testcase name="testPower(double, double, double)[1]" classname="com.calculator.CalculatorTest" time="0.001"/>
   <testcase name="testPower(double, double, double)[2]" classname="com.calculator.CalculatorTest" time="0.001"/>
-  <testcase name="testPower(double, double, double)[3]" classname="com.calculator.CalculatorTest" time="0"/>
-  <testcase name="testRound(double, int, double)[1]" classname="com.calculator.CalculatorTest" time="0.004"/>
-  <testcase name="testRound(double, int, double)[2]" classname="com.calculator.CalculatorTest" time="0"/>
+  <testcase name="testPower(double, double, double)[3]" classname="com.calculator.CalculatorTest" time="0.001"/>
+  <testcase name="testRound(double, int, double)[1]" classname="com.calculator.CalculatorTest" time="0.005"/>
+  <testcase name="testRound(double, int, double)[2]" classname="com.calculator.CalculatorTest" time="0.001"/>
   <testcase name="testRound(double, int, double)[3]" classname="com.calculator.CalculatorTest" time="0.001"/>
-  <testcase name="testToString" classname="com.calculator.CalculatorTest" time="0.005"/>
-  <testcase name="testFactorial(int, long)[1]" classname="com.calculator.CalculatorTest" time="0.008"/>
+  <testcase name="testToString" classname="com.calculator.CalculatorTest" time="0.003"/>
+  <testcase name="testFactorial(int, long)[1]" classname="com.calculator.CalculatorTest" time="0.006"/>
   <testcase name="testFactorial(int, long)[2]" classname="com.calculator.CalculatorTest" time="0.001"/>
-  <testcase name="testFactorial(int, long)[3]" classname="com.calculator.CalculatorTest" time="0"/>
+  <testcase name="testFactorial(int, long)[3]" classname="com.calculator.CalculatorTest" time="0.001"/>
   <testcase name="testFactorial(int, long)[4]" classname="com.calculator.CalculatorTest" time="0.001"/>
   <testcase name="testCalculationHistory" classname="com.calculator.CalculatorTest" time="0.001"/>
-  <testcase name="testConstants" classname="com.calculator.CalculatorTest" time="0.002"/>
+  <testcase name="testConstants" classname="com.calculator.CalculatorTest" time="0"/>
   <testcase name="testMemoryStoreNaN" classname="com.calculator.CalculatorTest" time="0.001"/>
-  <testcase name="testMemoryOperations" classname="com.calculator.CalculatorTest" time="0"/>
-  <testcase name="testIsIntegerFalse(double)[1]" classname="com.calculator.CalculatorTest" time="0.005"/>
+  <testcase name="testMemoryOperations" classname="com.calculator.CalculatorTest" time="0.001"/>
+  <testcase name="testIsIntegerFalse(double)[1]" classname="com.calculator.CalculatorTest" time="0.004"/>
   <testcase name="testIsIntegerFalse(double)[2]" classname="com.calculator.CalculatorTest" time="0.001"/>
-  <testcase name="testIsIntegerFalse(double)[3]" classname="com.calculator.CalculatorTest" time="0.002"/>
-  <testcase name="testIsIntegerTrue(double)[1]" classname="com.calculator.CalculatorTest" time="0.001"/>
+  <testcase name="testIsIntegerFalse(double)[3]" classname="com.calculator.CalculatorTest" time="0.001"/>
+  <testcase name="testIsIntegerTrue(double)[1]" classname="com.calculator.CalculatorTest" time="0.002"/>
   <testcase name="testIsIntegerTrue(double)[2]" classname="com.calculator.CalculatorTest" time="0.001"/>
   <testcase name="testIsIntegerTrue(double)[3]" classname="com.calculator.CalculatorTest" time="0"/>
   <testcase name="testIsIntegerTrue(double)[4]" classname="com.calculator.CalculatorTest" time="0.001"/>
   <testcase name="testDivide(double, double, double)[1]" classname="com.calculator.CalculatorTest" time="0.001"/>
-  <testcase name="testDivide(double, double, double)[2]" classname="com.calculator.CalculatorTest" time="0"/>
+  <testcase name="testDivide(double, double, double)[2]" classname="com.calculator.CalculatorTest" time="0.001"/>
   <testcase name="testDivide(double, double, double)[3]" classname="com.calculator.CalculatorTest" time="0.001"/>
   <testcase name="testMultiply(double, double, double)[1]" classname="com.calculator.CalculatorTest" time="0.001"/>
   <testcase name="testMultiply(double, double, double)[2]" classname="com.calculator.CalculatorTest" time="0.001"/>
   <testcase name="testMultiply(double, double, double)[3]" classname="com.calculator.CalculatorTest" time="0.001"/>
-  <testcase name="testSquareRoot(double, double)[1]" classname="com.calculator.CalculatorTest" time="0.002"/>
+  <testcase name="testSquareRoot(double, double)[1]" classname="com.calculator.CalculatorTest" time="0.003"/>
   <testcase name="testSquareRoot(double, double)[2]" classname="com.calculator.CalculatorTest" time="0.001"/>
-  <testcase name="testSquareRoot(double, double)[3]" classname="com.calculator.CalculatorTest" time="0"/>
+  <testcase name="testSquareRoot(double, double)[3]" classname="com.calculator.CalculatorTest" time="0.001"/>
   <testcase name="testSquareRoot(double, double)[4]" classname="com.calculator.CalculatorTest" time="0.001"/>
   <testcase name="testFactorialOverflow" classname="com.calculator.CalculatorTest" time="0.001"/>
-  <testcase name="testFactorialNegative" classname="com.calculator.CalculatorTest" time="0"/>
-  <testcase name="testClearHistory" classname="com.calculator.CalculatorTest" time="0"/>
-  <testcase name="userCanMultiplyPositiveNumbers" classname="com.calculator.CalculatorTest$UserMultiplicationTests" time="0"/>
+  <testcase name="testFactorialNegative" classname="com.calculator.CalculatorTest" time="0.001"/>
+  <testcase name="testClearHistory" classname="com.calculator.CalculatorTest" time="0.001"/>
+  <testcase name="userCanMultiplyPositiveNumbers" classname="com.calculator.CalculatorTest$UserMultiplicationTests" time="0.001"/>
   <testcase name="userCanMultiplyByZero" classname="com.calculator.CalculatorTest$UserMultiplicationTests" time="0"/>
-  <testcase name="userCanMultiplyByOne" classname="com.calculator.CalculatorTest$UserMultiplicationTests" time="0"/>
+  <testcase name="userCanMultiplyByOne" classname="com.calculator.CalculatorTest$UserMultiplicationTests" time="0.001"/>
   <testcase name="userMultiplicationScenarios(double, double, double)[1]" classname="com.calculator.CalculatorTest$UserMultiplicationTests" time="0.001"/>
   <testcase name="userMultiplicationScenarios(double, double, double)[2]" classname="com.calculator.CalculatorTest$UserMultiplicationTests" time="0.001"/>
-  <testcase name="userMultiplicationScenarios(double, double, double)[3]" classname="com.calculator.CalculatorTest$UserMultiplicationTests" time="0"/>
+  <testcase name="userMultiplicationScenarios(double, double, double)[3]" classname="com.calculator.CalculatorTest$UserMultiplicationTests" time="0.001"/>
   <testcase name="userMultiplicationScenarios(double, double, double)[4]" classname="com.calculator.CalculatorTest$UserMultiplicationTests" time="0.001"/>
-  <testcase name="userMultiplicationScenarios(double, double, double)[5]" classname="com.calculator.CalculatorTest$UserMultiplicationTests" time="0"/>
+  <testcase name="userMultiplicationScenarios(double, double, double)[5]" classname="com.calculator.CalculatorTest$UserMultiplicationTests" time="0.001"/>
   <testcase name="userMultiplicationScenarios(double, double, double)[6]" classname="com.calculator.CalculatorTest$UserMultiplicationTests" time="0.001"/>
 </testsuite>

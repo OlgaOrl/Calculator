@@ -212,14 +212,15 @@ public class Calculator {
     /**
      * Calculates the square root of a number.
      * 
-     * @param number the number to find square root of
+     * @param number the number to calculate square root for
      * @return the square root of the number
-     * @throws InvalidInputException if number is negative or NaN
+     * @throws InvalidInputException if number is negative
      */
     public double squareRoot(double number) throws InvalidInputException {
         validateInput(number, "Number");
+        
         if (number < 0) {
-            throw new InvalidInputException("Cannot calculate square root of negative number: " + number);
+            throw new InvalidInputException("Square root is not defined for negative numbers: " + number);
         }
         
         double result = Math.sqrt(number);
@@ -245,11 +246,11 @@ public class Calculator {
     }
     
     /**
-     * Returns the absolute value of a number.
+     * Calculates the absolute value of a number.
      * 
-     * @param number the number
-     * @return the absolute value
-     * @throws InvalidInputException if parameter is NaN
+     * @param number the number to get absolute value for
+     * @return the absolute value of the number
+     * @throws InvalidInputException if number is NaN
      */
     public double absolute(double number) throws InvalidInputException {
         validateInput(number, "Number");
@@ -295,44 +296,56 @@ public class Calculator {
     public void memoryStore(double value) throws InvalidInputException {
         validateInput(value, "Memory value");
         this.memory = value;
+        logCalculation("Memory stored: " + formatResult(value));
     }
     
     /**
      * Recalls the value from memory.
      * 
-     * @return the stored memory value
+     * @return the value stored in memory
      */
     public double memoryRecall() {
         return memory;
     }
     
     /**
-     * Clears the memory (sets to 0).
-     */
-    public void memoryClear() {
-        this.memory = 0.0;
-    }
-    
-    /**
-     * Adds a value to the current memory value.
+     * Adds a value to memory.
      * 
      * @param value the value to add to memory
      * @throws InvalidInputException if value is NaN
      */
     public void memoryAdd(double value) throws InvalidInputException {
-        validateInput(value, "Memory add value");
+        validateInput(value, "Memory value");
         this.memory += value;
+        logCalculation("Memory add: " + formatResult(value) + ", Total: " + formatResult(memory));
+    }
+    
+    /**
+     * Clears the memory.
+     */
+    public void memoryClear() {
+        this.memory = 0.0;
+        logCalculation("Memory cleared");
     }
     
     // History Operations
     
     /**
-     * Returns a copy of the calculation history.
+     * Gets the calculation history.
      * 
-     * @return list of calculation history entries
+     * @return list of calculation history
      */
     public List<String> getHistory() {
         return new ArrayList<>(history);
+    }
+    
+    /**
+     * Gets the last calculation.
+     * 
+     * @return the last calculation or null if no calculations
+     */
+    public String getLastCalculation() {
+        return history.isEmpty() ? null : history.get(history.size() - 1);
     }
     
     /**
@@ -343,12 +356,12 @@ public class Calculator {
     }
     
     /**
-     * Returns the last calculation from history.
+     * Logs a calculation to history.
      * 
-     * @return the last calculation or null if history is empty
+     * @param calculation the calculation to log
      */
-    public String getLastCalculation() {
-        return history.isEmpty() ? null : history.get(history.size() - 1);
+    private void logCalculation(String calculation) {
+        history.add(calculation);
     }
     
     // Utility Methods
@@ -407,16 +420,13 @@ public class Calculator {
         }
     }
     
-    private void logCalculation(String calculation) {
-        history.add(calculation);
-    }
-    
     @Override
     public String toString() {
-        return "Calculator[ready for operations, memory=" + formatResult(memory) + 
-               ", history entries=" + history.size() + "]";
+        return String.format("Calculator{memory=%.2f, history entries=%d}", 
+                           memory, history.size());
     }
 }
+
 
 
 
