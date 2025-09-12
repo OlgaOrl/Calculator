@@ -78,16 +78,39 @@ public class Calculator {
     }
     
     /**
-     * Subtracts the second number from the first.
+     * Subtracts the second number from the first number and returns the difference.
      * 
-     * @param a the minuend
-     * @param b the subtrahend
-     * @return the difference of a minus b
+     * <p>This method performs basic subtraction of two double values (a - b), 
+     * handling special cases such as infinity and NaN according to IEEE 754 standard.
+     * The order of parameters matters: subtract(a, b) returns a - b.</p>
+     * 
+     * <p><strong>Usage Examples:</strong></p>
+     * <pre>{@code
+     * Calculator calc = new Calculator();
+     * double result1 = calc.subtract(10.0, 3.0);      // returns 7.0
+     * double result2 = calc.subtract(5.0, 8.0);       // returns -3.0
+     * double result3 = calc.subtract(-2.5, -7.5);     // returns 5.0
+     * double result4 = calc.subtract(15.0, 0.0);      // returns 15.0
+     * }</pre>
+     * 
+     * <p><strong>Edge Cases:</strong></p>
+     * <ul>
+     * <li>Subtracting from {@code Double.POSITIVE_INFINITY} returns {@code Double.POSITIVE_INFINITY}</li>
+     * <li>Subtracting {@code Double.POSITIVE_INFINITY} returns {@code Double.NEGATIVE_INFINITY}</li>
+     * <li>Subtracting equal infinities: {@code POSITIVE_INFINITY - POSITIVE_INFINITY} returns {@code Double.NaN}</li>
+     * <li>Operations with {@code Double.NaN} return {@code Double.NaN}</li>
+     * <li>Overflow results in {@code Double.POSITIVE_INFINITY} or {@code Double.NEGATIVE_INFINITY}</li>
+     * </ul>
+     * 
+     * @param a the minuend (number to subtract from)
+     * @param b the subtrahend (number to subtract)
+     * @return the difference a - b, following IEEE 754 arithmetic rules
      * @throws InvalidInputException if either parameter is NaN
+     * @since 1.2
      */
     public double subtract(double a, double b) throws InvalidInputException {
-        validateInput(a, "First parameter");
-        validateInput(b, "Second parameter");
+        validateInput(a, "Minuend");
+        validateInput(b, "Subtrahend");
         
         double result = a - b;
         logCalculation(a + " - " + b + " = " + formatResult(result));
@@ -360,6 +383,7 @@ public class Calculator {
                ", history entries=" + history.size() + "]";
     }
 }
+
 
 
 
