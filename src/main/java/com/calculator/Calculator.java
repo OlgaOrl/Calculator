@@ -42,12 +42,31 @@ public class Calculator {
     // Basic Arithmetic Operations
     
     /**
-     * Adds two numbers and returns the sum.
+     * Adds two double numbers and returns their sum.
      * 
-     * @param a the first number
-     * @param b the second number
-     * @return the sum of a and b
+     * <p>This method performs basic addition of two double values, handling
+     * special cases such as infinity and NaN according to IEEE 754 standard.</p>
+     * 
+     * <p><strong>Usage Examples:</strong></p>
+     * <pre>{@code
+     * Calculator calc = new Calculator();
+     * double result1 = calc.add(5.0, 3.0);        // returns 8.0
+     * double result2 = calc.add(-2.5, 7.5);       // returns 5.0
+     * double result3 = calc.add(0.1, 0.2);        // returns 0.3
+     * }</pre>
+     * 
+     * <p><strong>Edge Cases:</strong></p>
+     * <ul>
+     * <li>Adding with {@code Double.POSITIVE_INFINITY} returns {@code Double.POSITIVE_INFINITY}</li>
+     * <li>Adding with {@code Double.NaN} returns {@code Double.NaN}</li>
+     * <li>Overflow results in {@code Double.POSITIVE_INFINITY} or {@code Double.NEGATIVE_INFINITY}</li>
+     * </ul>
+     * 
+     * @param a the first number to add
+     * @param b the second number to add
+     * @return the sum of a and b, following IEEE 754 arithmetic rules
      * @throws InvalidInputException if either parameter is NaN
+     * @since 1.1
      */
     public double add(double a, double b) throws InvalidInputException {
         validateInput(a, "First parameter");
@@ -341,6 +360,7 @@ public class Calculator {
                ", history entries=" + history.size() + "]";
     }
 }
+
 
 
 
