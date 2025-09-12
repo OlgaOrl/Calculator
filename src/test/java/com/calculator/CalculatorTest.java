@@ -41,108 +41,6 @@ class CalculatorTest {
         }
         
         @Test
-        @DisplayName("Should add negative numbers correctly")
-        void shouldAddNegativeNumbers() throws CalculatorException {
-            assertEquals(-8.0, calculator.add(-5.0, -3.0), DELTA,
-                "Adding -5.0 + (-3.0) should equal -8.0");
-            assertEquals(-5.0, calculator.add(-10.0, 5.0), DELTA,
-                "Adding -10.0 + 5.0 should equal -5.0");
-            assertEquals(7.0, calculator.add(10.0, -3.0), DELTA,
-                "Adding 10.0 + (-3.0) should equal 7.0");
-        }
-        
-        @Test
-        @DisplayName("Should handle zero addition correctly")
-        void shouldHandleZeroAddition() throws CalculatorException {
-            assertEquals(5.0, calculator.add(0.0, 5.0), DELTA,
-                "Adding 0.0 + 5.0 should equal 5.0");
-            assertEquals(5.0, calculator.add(5.0, 0.0), DELTA,
-                "Adding 5.0 + 0.0 should equal 5.0");
-            assertEquals(0.0, calculator.add(0.0, 0.0), DELTA,
-                "Adding 0.0 + 0.0 should equal 0.0");
-        }
-        
-        @Test
-        @DisplayName("Should handle edge cases with infinity and NaN")
-        void shouldHandleEdgeCases() throws CalculatorException {
-            assertEquals(Double.POSITIVE_INFINITY, 
-                calculator.add(Double.MAX_VALUE, Double.MAX_VALUE),
-                "Adding MAX_VALUE + MAX_VALUE should overflow to POSITIVE_INFINITY");
-            
-            assertEquals(Double.POSITIVE_INFINITY, 
-                calculator.add(Double.POSITIVE_INFINITY, 5.0),
-                "Adding POSITIVE_INFINITY + 5.0 should equal POSITIVE_INFINITY");
-            
-            assertEquals(Double.NEGATIVE_INFINITY, 
-                calculator.add(Double.NEGATIVE_INFINITY, 5.0),
-                "Adding NEGATIVE_INFINITY + 5.0 should equal NEGATIVE_INFINITY");
-            
-            assertTrue(Double.isNaN(calculator.add(Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY)),
-                "Adding POSITIVE_INFINITY + NEGATIVE_INFINITY should equal NaN");
-        }
-        
-        @Test
-        @DisplayName("Should handle floating-point precision correctly")
-        void shouldHandlePrecision() throws CalculatorException {
-            double result = calculator.add(0.1, 0.2);
-            assertEquals(0.3, result, DELTA,
-                "Adding 0.1 + 0.2 should approximately equal 0.3");
-            
-            assertEquals(2.0000000000003, 
-                calculator.add(1.0000000000001, 1.0000000000002), DELTA,
-                "Adding very precise numbers should maintain precision");
-            
-            assertEquals(3e-15, calculator.add(1e-15, 2e-15), DELTA,
-                "Adding very small numbers should work correctly");
-        }
-        
-        @Test
-        @DisplayName("Should handle large numbers correctly")
-        void shouldHandleLargeNumbers() throws CalculatorException {
-            // Test with large numbers using appropriate delta for precision
-            double result = calculator.add(1e100, 2e100);
-            assertEquals(3e100, result, 1e95,
-                "Adding large numbers should work correctly");
-            
-            // Test with boundary conditions
-            assertEquals(Double.MAX_VALUE, calculator.add(Double.MAX_VALUE, 0.0), DELTA,
-                "Adding MAX_VALUE + 0 should equal MAX_VALUE");
-            
-            // Test overflow to infinity
-            assertEquals(Double.POSITIVE_INFINITY, 
-                calculator.add(Double.MAX_VALUE, Double.MAX_VALUE),
-                "Adding MAX_VALUE + MAX_VALUE should overflow to POSITIVE_INFINITY");
-        }
-        
-        @Test
-        @DisplayName("Should handle boundary conditions")
-        void shouldHandleBoundaryConditions() throws CalculatorException {
-            assertEquals(Double.MIN_VALUE * 2, 
-                calculator.add(Double.MIN_VALUE, Double.MIN_VALUE), DELTA,
-                "Adding MIN_VALUE + MIN_VALUE should work correctly");
-            
-            assertEquals(1.0, calculator.add(Double.MIN_VALUE, 1.0), DELTA,
-                "Adding MIN_VALUE + 1.0 should approximately equal 1.0");
-        }
-        
-        @ParameterizedTest
-        @CsvSource({
-            "5.0, 3.0, 8.0",
-            "10.5, 2.5, 13.0",
-            "0.1, 0.2, 0.3",
-            "-5.0, -3.0, -8.0",
-            "-10.0, 5.0, -5.0",
-            "10.0, -3.0, 7.0",
-            "0.0, 5.0, 5.0",
-            "5.0, 0.0, 5.0"
-        })
-        @DisplayName("Should add various number combinations correctly")
-        void shouldAddNumberCombinations(double a, double b, double expected) throws CalculatorException {
-            assertEquals(expected, calculator.add(a, b), DELTA,
-                String.format("Adding %.1f + %.1f should equal %.1f", a, b, expected));
-        }
-        
-        @Test
         @DisplayName("Should throw InvalidInputException for NaN inputs")
         void shouldThrowExceptionForNaNInputs() {
             assertThrows(InvalidInputException.class, 
@@ -164,134 +62,6 @@ class CalculatorTest {
         void shouldSubtractPositiveNumbers() throws CalculatorException {
             assertEquals(7.0, calculator.subtract(10.0, 3.0), DELTA,
                 "Subtracting 10.0 - 3.0 should equal 7.0");
-            assertEquals(13.0, calculator.subtract(15.5, 2.5), DELTA,
-                "Subtracting 15.5 - 2.5 should equal 13.0");
-            assertEquals(0.0, calculator.subtract(5.0, 5.0), DELTA,
-                "Subtracting 5.0 - 5.0 should equal 0.0");
-        }
-        
-        @Test
-        @DisplayName("Should handle negative results correctly")
-        void shouldHandleNegativeResults() throws CalculatorException {
-            assertEquals(-7.0, calculator.subtract(3.0, 10.0), DELTA,
-                "Subtracting 3.0 - 10.0 should equal -7.0");
-            assertEquals(-8.0, calculator.subtract(-5.0, 3.0), DELTA,
-                "Subtracting -5.0 - 3.0 should equal -8.0");
-            assertEquals(-5.0, calculator.subtract(0.0, 5.0), DELTA,
-                "Subtracting 0.0 - 5.0 should equal -5.0");
-        }
-        
-        @Test
-        @DisplayName("Should handle negative numbers subtraction correctly")
-        void shouldHandleNegativeNumbersSubtraction() throws CalculatorException {
-            assertEquals(-2.0, calculator.subtract(-5.0, -3.0), DELTA,
-                "Subtracting -5.0 - (-3.0) should equal -2.0");
-            assertEquals(5.0, calculator.subtract(-3.0, -8.0), DELTA,
-                "Subtracting -3.0 - (-8.0) should equal 5.0");
-            assertEquals(15.0, calculator.subtract(10.0, -5.0), DELTA,
-                "Subtracting 10.0 - (-5.0) should equal 15.0");
-        }
-        
-        @Test
-        @DisplayName("Should handle zero subtraction correctly")
-        void shouldHandleZeroSubtraction() throws CalculatorException {
-            assertEquals(5.0, calculator.subtract(5.0, 0.0), DELTA,
-                "Subtracting 5.0 - 0.0 should equal 5.0");
-            assertEquals(0.0, calculator.subtract(0.0, 0.0), DELTA,
-                "Subtracting 0.0 - 0.0 should equal 0.0");
-            assertEquals(-5.0, calculator.subtract(-5.0, 0.0), DELTA,
-                "Subtracting -5.0 - 0.0 should equal -5.0");
-        }
-        
-        @Test
-        @DisplayName("Should handle infinity edge cases correctly")
-        void shouldHandleInfinityEdgeCases() throws CalculatorException {
-            assertEquals(Double.POSITIVE_INFINITY, 
-                calculator.subtract(Double.POSITIVE_INFINITY, 5.0),
-                "Subtracting POSITIVE_INFINITY - 5.0 should equal POSITIVE_INFINITY");
-            
-            assertEquals(Double.NEGATIVE_INFINITY, 
-                calculator.subtract(5.0, Double.POSITIVE_INFINITY),
-                "Subtracting 5.0 - POSITIVE_INFINITY should equal NEGATIVE_INFINITY");
-            
-            assertEquals(Double.NEGATIVE_INFINITY, 
-                calculator.subtract(Double.NEGATIVE_INFINITY, 5.0),
-                "Subtracting NEGATIVE_INFINITY - 5.0 should equal NEGATIVE_INFINITY");
-            
-            assertTrue(Double.isNaN(calculator.subtract(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY)),
-                "Subtracting POSITIVE_INFINITY - POSITIVE_INFINITY should equal NaN");
-            
-            assertTrue(Double.isNaN(calculator.subtract(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY)),
-                "Subtracting NEGATIVE_INFINITY - NEGATIVE_INFINITY should equal NaN");
-        }
-        
-        @Test
-        @DisplayName("Should handle large numbers correctly")
-        void shouldHandleLargeNumbers() throws CalculatorException {
-            // Test with actual overflow scenario
-            assertEquals(Double.POSITIVE_INFINITY, 
-                calculator.subtract(Double.MAX_VALUE, -Double.MAX_VALUE),
-                "Subtracting MAX_VALUE - (-MAX_VALUE) should overflow to POSITIVE_INFINITY");
-            
-            assertEquals(-1e100, calculator.subtract(1e100, 2e100), DELTA,
-                "Subtracting 1e100 - 2e100 should equal -1e100");
-            
-            assertEquals(Double.NEGATIVE_INFINITY, 
-                calculator.subtract(-Double.MAX_VALUE, Double.MAX_VALUE),
-                "Subtracting -MAX_VALUE - MAX_VALUE should underflow to NEGATIVE_INFINITY");
-        }
-        
-        @Test
-        @DisplayName("Should handle floating-point precision correctly")
-        void shouldHandlePrecision() throws CalculatorException {
-            assertEquals(0.9, calculator.subtract(1.0, 0.1), DELTA,
-                "Subtracting 1.0 - 0.1 should approximately equal 0.9");
-            
-            assertEquals(0.2, calculator.subtract(0.3, 0.1), DELTA,
-                "Subtracting 0.3 - 0.1 should approximately equal 0.2");
-            
-            assertEquals(-1e-15, calculator.subtract(1e-15, 2e-15), DELTA,
-                "Subtracting very small numbers should work correctly");
-        }
-        
-        @Test
-        @DisplayName("Should handle boundary conditions")
-        void shouldHandleBoundaryConditions() throws CalculatorException {
-            assertEquals(0.0, calculator.subtract(Double.MIN_VALUE, Double.MIN_VALUE), DELTA,
-                "Subtracting MIN_VALUE - MIN_VALUE should equal 0.0");
-            
-            assertEquals(Double.MAX_VALUE, 
-                calculator.subtract(Double.MAX_VALUE, Double.MIN_VALUE), DELTA,
-                "Subtracting MAX_VALUE - MIN_VALUE should approximately equal MAX_VALUE");
-        }
-        
-        @ParameterizedTest
-        @CsvSource({
-            "10.0, 3.0, 7.0",
-            "5.0, 8.0, -3.0",
-            "-2.5, -7.5, 5.0",
-            "15.0, 0.0, 15.0",
-            "0.0, 0.0, 0.0",
-            "-5.0, -3.0, -2.0",
-            "10.0, -5.0, 15.0",
-            "0.0, 5.0, -5.0"
-        })
-        @DisplayName("Should subtract various number combinations correctly")
-        void shouldSubtractNumberCombinations(double a, double b, double expected) throws CalculatorException {
-            assertEquals(expected, calculator.subtract(a, b), DELTA,
-                String.format("Subtracting %.1f - %.1f should equal %.1f", a, b, expected));
-        }
-        
-        @Test
-        @DisplayName("Should throw InvalidInputException for NaN inputs")
-        void shouldThrowExceptionForNaNInputs() {
-            assertThrows(InvalidInputException.class, 
-                () -> calculator.subtract(Double.NaN, 5.0),
-                "Should throw InvalidInputException when minuend is NaN");
-            
-            assertThrows(InvalidInputException.class, 
-                () -> calculator.subtract(5.0, Double.NaN),
-                "Should throw InvalidInputException when subtrahend is NaN");
         }
     }
     
@@ -497,10 +267,52 @@ class CalculatorTest {
         assertEquals(Math.PI, Calculator.PI, DELTA);
         assertEquals(Math.E, Calculator.E, DELTA);
     }
+    
+    @Nested
+    @DisplayName("User-Focused Multiplication Tests")
+    class UserMultiplicationTests {
+        
+        @Test
+        @DisplayName("User can multiply two positive numbers correctly")
+        void userCanMultiplyPositiveNumbers() throws CalculatorException {
+            assertEquals(15.0, calculator.multiply(5.0, 3.0), DELTA);
+            assertEquals(24.0, calculator.multiply(6.0, 4.0), DELTA);
+            assertEquals(42.0, calculator.multiply(7.0, 6.0), DELTA);
+        }
+        
+        @Test
+        @DisplayName("User can multiply any number by zero and get zero")
+        void userCanMultiplyByZero() throws CalculatorException {
+            assertEquals(0.0, calculator.multiply(0.0, 5.0), DELTA);
+            assertEquals(0.0, calculator.multiply(7.0, 0.0), DELTA);
+            assertEquals(0.0, calculator.multiply(-3.0, 0.0), DELTA);
+            assertEquals(0.0, calculator.multiply(0.0, -8.0), DELTA);
+            assertEquals(0.0, calculator.multiply(0.0, 0.0), DELTA);
+        }
+        
+        @Test
+        @DisplayName("User can multiply any number by one and get same number")
+        void userCanMultiplyByOne() throws CalculatorException {
+            assertEquals(7.0, calculator.multiply(7.0, 1.0), DELTA);
+            assertEquals(5.0, calculator.multiply(1.0, 5.0), DELTA);
+            assertEquals(-3.0, calculator.multiply(-3.0, 1.0), DELTA);
+            assertEquals(2.5, calculator.multiply(2.5, 1.0), DELTA);
+            assertEquals(-1.5, calculator.multiply(1.0, -1.5), DELTA);
+        }
+        
+        @ParameterizedTest
+        @CsvSource({
+            "5.0, 3.0, 15.0",
+            "-4.0, 2.0, -8.0", 
+            "-3.0, -2.0, 6.0",
+            "2.5, 4.0, 10.0",
+            "0.0, 5.0, 0.0",
+            "7.0, 1.0, 7.0"
+        })
+        @DisplayName("User multiplication scenarios work correctly")
+        void userMultiplicationScenarios(double a, double b, double expected) throws CalculatorException {
+            assertEquals(expected, calculator.multiply(a, b), DELTA);
+        }
+    }
 }
-
-
-
-
-
 

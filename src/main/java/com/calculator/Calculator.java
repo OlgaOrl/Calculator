@@ -118,16 +118,50 @@ public class Calculator {
     }
     
     /**
-     * Multiplies two numbers and returns the product.
+     * Multiplies two numbers and returns their product.
      * 
-     * @param a the first factor
-     * @param b the second factor
+     * <p>This method allows users to multiply any two numbers, including positive numbers,
+     * negative numbers, decimals, and special values like zero and one. The multiplication
+     * follows standard mathematical rules and provides clear, accurate results.</p>
+     * 
+     * <p><strong>User Examples:</strong></p>
+     * <pre>{@code
+     * Calculator calc = new Calculator();
+     * 
+     * // Multiply positive numbers
+     * double result1 = calc.multiply(5.0, 3.0);        // returns 15.0
+     * 
+     * // Multiply with negative numbers  
+     * double result2 = calc.multiply(-4.0, 2.0);       // returns -8.0
+     * double result3 = calc.multiply(-3.0, -2.0);      // returns 6.0
+     * 
+     * // Multiply decimals
+     * double result4 = calc.multiply(2.5, 4.0);        // returns 10.0
+     * 
+     * // Multiply by zero (always gives zero)
+     * double result5 = calc.multiply(0.0, 5.0);        // returns 0.0
+     * 
+     * // Multiply by one (gives same number) 
+     * double result6 = calc.multiply(7.0, 1.0);        // returns 7.0
+     * }</pre>
+     * 
+     * <p><strong>Mathematical Properties:</strong></p>
+     * <ul>
+     * <li>Commutative: a × b = b × a</li>
+     * <li>Identity: a × 1 = a</li>
+     * <li>Zero property: a × 0 = 0</li>
+     * <li>Sign rules: (-) × (-) = (+), (-) × (+) = (-), (+) × (+) = (+)</li>
+     * </ul>
+     * 
+     * @param a the first number to multiply
+     * @param b the second number to multiply  
      * @return the product of a and b
      * @throws InvalidInputException if either parameter is NaN
+     * @since 1.3
      */
     public double multiply(double a, double b) throws InvalidInputException {
-        validateInput(a, "First parameter");
-        validateInput(b, "Second parameter");
+        validateInput(a, "Multiplicand");
+        validateInput(b, "Multiplier");
         
         double result = a * b;
         logCalculation(a + " * " + b + " = " + formatResult(result));
@@ -383,6 +417,7 @@ public class Calculator {
                ", history entries=" + history.size() + "]";
     }
 }
+
 
 
 
