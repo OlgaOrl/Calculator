@@ -78,35 +78,12 @@ public class Calculator {
     }
     
     /**
-     * Subtracts the second number from the first number and returns the difference.
+     * Subtracts the second number from the first.
      * 
-     * <p>This method performs basic subtraction of two double values (a - b), 
-     * handling special cases such as infinity and NaN according to IEEE 754 standard.
-     * The order of parameters matters: subtract(a, b) returns a - b.</p>
-     * 
-     * <p><strong>Usage Examples:</strong></p>
-     * <pre>{@code
-     * Calculator calc = new Calculator();
-     * double result1 = calc.subtract(10.0, 3.0);      // returns 7.0
-     * double result2 = calc.subtract(5.0, 8.0);       // returns -3.0
-     * double result3 = calc.subtract(-2.5, -7.5);     // returns 5.0
-     * double result4 = calc.subtract(15.0, 0.0);      // returns 15.0
-     * }</pre>
-     * 
-     * <p><strong>Edge Cases:</strong></p>
-     * <ul>
-     * <li>Subtracting from {@code Double.POSITIVE_INFINITY} returns {@code Double.POSITIVE_INFINITY}</li>
-     * <li>Subtracting {@code Double.POSITIVE_INFINITY} returns {@code Double.NEGATIVE_INFINITY}</li>
-     * <li>Subtracting equal infinities: {@code POSITIVE_INFINITY - POSITIVE_INFINITY} returns {@code Double.NaN}</li>
-     * <li>Operations with {@code Double.NaN} return {@code Double.NaN}</li>
-     * <li>Overflow results in {@code Double.POSITIVE_INFINITY} or {@code Double.NEGATIVE_INFINITY}</li>
-     * </ul>
-     * 
-     * @param a the minuend (number to subtract from)
-     * @param b the subtrahend (number to subtract)
-     * @return the difference a - b, following IEEE 754 arithmetic rules
+     * @param a the minuend
+     * @param b the subtrahend
+     * @return the difference of a minus b
      * @throws InvalidInputException if either parameter is NaN
-     * @since 1.2
      */
     public double subtract(double a, double b) throws InvalidInputException {
         validateInput(a, "Minuend");
@@ -193,7 +170,24 @@ public class Calculator {
     // Advanced Mathematical Operations
     
     /**
-     * Raises the base to the power of the exponent.
+     * Calculates a percentage of a number.
+     * 
+     * @param number the base number
+     * @param percent the percentage to calculate
+     * @return the percentage value
+     * @throws InvalidInputException if either parameter is NaN
+     */
+    public double percentage(double number, double percent) throws InvalidInputException {
+        validateInput(number, "Number");
+        validateInput(percent, "Percentage");
+        
+        double result = (number * percent) / 100.0;
+        logCalculation(percent + "% of " + number + " = " + formatResult(result));
+        return result;
+    }
+    
+    /**
+     * Calculates the power of a number.
      * 
      * @param base the base number
      * @param exponent the exponent
@@ -205,7 +199,7 @@ public class Calculator {
         validateInput(exponent, "Exponent");
         
         double result = Math.pow(base, exponent);
-        logCalculation(base + " ^ " + exponent + " = " + formatResult(result));
+        logCalculation(base + "^" + exponent + " = " + formatResult(result));
         return result;
     }
     
@@ -225,23 +219,6 @@ public class Calculator {
         
         double result = Math.sqrt(number);
         logCalculation("√" + number + " = " + formatResult(result));
-        return result;
-    }
-    
-    /**
-     * Calculates percentage of a number.
-     * 
-     * @param number the base number
-     * @param percent the percentage
-     * @return the percentage of the number
-     * @throws InvalidInputException if either parameter is NaN
-     */
-    public double percentage(double number, double percent) throws InvalidInputException {
-        validateInput(number, "Number");
-        validateInput(percent, "Percent");
-        
-        double result = (number * percent) / 100.0;
-        logCalculation(percent + "% of " + number + " = " + formatResult(result));
         return result;
     }
     
@@ -367,21 +344,25 @@ public class Calculator {
     // Utility Methods
     
     /**
-     * Rounds a value to specified decimal places.
+     * Rounds a number to specified decimal places.
      * 
      * @param value the value to round
      * @param places the number of decimal places
      * @return the rounded value
-     * @throws InvalidInputException if places is negative
+     * @throws InvalidInputException if value is NaN or places is negative
      */
     public double round(double value, int places) throws InvalidInputException {
+        validateInput(value, "Value");
         if (places < 0) {
             throw new InvalidInputException("Decimal places cannot be negative: " + places);
         }
         
         BigDecimal bd = new BigDecimal(Double.toString(value));
         bd = bd.setScale(places, RoundingMode.HALF_UP);
-        return bd.doubleValue();
+        double result = bd.doubleValue();
+        
+        logCalculation("Round " + value + " to " + places + " places = " + formatResult(result));
+        return result;
     }
     
     /**
@@ -426,12 +407,5 @@ public class Calculator {
                            memory, history.size());
     }
 }
-
-
-
-
-
-
-
 
 
