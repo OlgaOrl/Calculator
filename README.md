@@ -22,6 +22,7 @@ A simple and powerful calculator application with beautiful graphical interface 
 - **Sign**: Press ± to make numbers positive/negative  
 - **Percent**: Press % for percentage calculations
 - **Decimal**: Press . for decimal numbers
+- **Advanced**: √ (square root), ∛ (cube root), x² (square), xʸ (power), ⁿ√ (nth root), 1/x (reciprocal)
 
 ### Command Line Version
 If you prefer typing, run:
@@ -39,12 +40,12 @@ mvn clean compile exec:java -Dexec.mainClass="com.calculator.CalculatorCLI"
 ## Features ✨
 
 - **Basic Math**: Add, subtract, multiply, divide
+- **Advanced Functions**: Powers, square roots, cube roots, nth roots, reciprocals
 - **Memory Functions**: Store, recall, clear, add to/subtract from memory
-- **Advanced Functions**: Powers, square roots, percentages
-- **Memory**: Store and recall numbers
-- **History**: See your previous calculations
+- **History**: See your previous calculations (GUI only)
 - **Error Protection**: Won't crash on invalid input
 - **Smart CLI**: Improved command-line experience with helpful guidance
+- **Dual Interface**: Both GUI and CLI available
 
 ### Memory Operations
 - **MS (Memory Store)**: Save a number to memory
@@ -53,18 +54,28 @@ mvn clean compile exec:java -Dexec.mainClass="com.calculator.CalculatorCLI"
 - **M+ (Memory Add)**: Add a number to current memory value
 - **M- (Memory Subtract)**: Subtract a number from current memory value
 
+### Advanced Operations
+- **√**: Square root calculation
+- **∛**: Cube root calculation  
+- **x²**: Square a number
+- **xʸ**: Raise to any power
+- **ⁿ√**: Calculate nth root
+- **1/x**: Reciprocal (1 divided by number)
+
 ## Usage Examples 📝
 
 ### Memory Operations Example
 ```
 === CALCULATOR MENU ===
 1. Basic Calculation
-2. Memory Operations  
-3. View Memory
-4. Exit
+2. Advanced Operations
+3. Memory Operations  
+4. View Memory
+5. Start GUI
+6. Exit
 📝 Memory: 42.5
 
-Choose option: 2
+Choose option: 3
 
 === MEMORY OPERATIONS ===
 MS - Memory Store (save a number)
@@ -93,6 +104,21 @@ Save result to memory? (y/n): y
 ✅ Result saved to memory
 ```
 
+### Advanced Operations Example
+```
+=== ADVANCED OPERATIONS ===
+1. Square Root (√)
+2. Power (x^y)
+3. Square (x²)
+4. Cube Root (∛)
+5. Nth Root
+
+Choose operation: 1
+Enter number for square root: 16
+✨ Result: √16 = 4
+Save result to memory? (y/n): n
+```
+
 ## Troubleshooting 🔧
 
 **Calculator won't start?**
@@ -100,14 +126,25 @@ Save result to memory? (y/n): y
 - Check that you're in the correct folder
 - Try running `java -version` to verify Java installation
 
+**Compilation errors?**
+- Run `mvn clean compile` first
+- Check for any missing dependencies
+- Ensure all source files are present
+
 **CLI Issues?**
 - Use: `mvn clean compile` then `java -cp target/classes com.calculator.CalculatorCLI`
 - Or try: `mvn exec:java -Dexec.mainClass=com.calculator.CalculatorCLI` (without quotes)
+
+**GUI Issues?**
+- Default command starts GUI: `mvn clean compile exec:java`
+- From CLI, choose option 5 to launch GUI
+- Both interfaces can run simultaneously
 
 **Need help with calculations?**
 - CLI shows helpful examples for invalid inputs
 - All error messages include suggestions
 - Use C button in GUI to clear and start fresh
+- History feature in GUI tracks your calculations
 
 ---
 

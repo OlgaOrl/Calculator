@@ -1,9 +1,24 @@
 package com.calculator;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.*;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 public class CalculatorGUI extends JFrame implements ActionListener {
     
@@ -65,22 +80,27 @@ public class CalculatorGUI extends JFrame implements ActionListener {
     }
     
     private JPanel createButtonPanel() {
-        JPanel panel = new JPanel(new GridLayout(6, 5, 3, 3));
+        JPanel panel = new JPanel(new GridLayout(7, 5, 3, 3));
         panel.setBackground(new Color(45, 45, 45));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
         String[] buttons = {
             "MC", "MR", "MS", "M+", "M-",
             "C", "CE", "√", "x²", "1/x",
-            "7", "8", "9", "÷", "%",
-            "4", "5", "6", "×", "±",
-            "1", "2", "3", "-", "History",
-            "0", ".", "=", "+", "Clear H"
+            "∛", "xʸ", "ⁿ√", "%", "±",
+            "7", "8", "9", "÷", "History",
+            "4", "5", "6", "×", "Clear H",
+            "1", "2", "3", "-", "",
+            "0", ".", "=", "+", ""
         };
         
         for (String text : buttons) {
-            JButton button = createButton(text);
-            panel.add(button);
+            if (!text.isEmpty()) {
+                JButton button = createButton(text);
+                panel.add(button);
+            } else {
+                panel.add(new JLabel()); // Empty space
+            }
         }
         
         return panel;
@@ -140,8 +160,14 @@ public class CalculatorGUI extends JFrame implements ActionListener {
                 handlePercent();
             } else if (command.equals("√")) {
                 handleSquareRoot();
+            } else if (command.equals("∛")) {
+                handleCubeRoot();
             } else if (command.equals("x²")) {
                 handleSquare();
+            } else if (command.equals("xʸ")) {
+                handlePowerOperation();
+            } else if (command.equals("ⁿ√")) {
+                handleNthRoot();
             } else if (command.equals("1/x")) {
                 handleReciprocal();
             } else if (command.startsWith("M")) {
@@ -210,6 +236,9 @@ public class CalculatorGUI extends JFrame implements ActionListener {
                     case "÷":
                         result = calculator.divide(firstNumber, secondNumber);
                         break;
+                    case "power":
+                        result = calculator.power(firstNumber, secondNumber);
+                        break;
                 }
                 
                 display.setText(calculator.formatResult(result));
@@ -244,7 +273,7 @@ public class CalculatorGUI extends JFrame implements ActionListener {
     
     private void handleSquareRoot() throws CalculatorException {
         double current = Double.parseDouble(display.getText());
-        double result = calculator.sqrt(current);
+        double result = calculator.squareRoot(current);
         display.setText(calculator.formatResult(result));
         isNewCalculation = true;
     }
@@ -328,12 +357,42 @@ public class CalculatorGUI extends JFrame implements ActionListener {
         }
     }
     
+    private void handleCubeRoot() throws CalculatorException {
+        double current = Double.parseDouble(display.getText());
+        double result = calculator.cubeRoot(current);
+        display.setText(calculator.formatResult(result));
+        isNewCalculation = true;
+    }
+    
+    private void handlePowerOperation() {
+        firstNumber = Double.parseDouble(display.getText());
+        operation = "power";
+        isNewCalculation = true;
+    }
+    
+    private void handleNthRoot() {
+        String nStr = JOptionPane.showInputDialog(this, "Enter root degree (n):", "Nth Root", JOptionPane.QUESTION_MESSAGE);
+        if (nStr != null && !nStr.trim().isEmpty()) {
+            try {
+                double current = Double.parseDouble(display.getText());
+                double n = Double.parseDouble(nStr.trim());
+                double result = calculator.nthRoot(current, n);
+                display.setText(calculator.formatResult(result));
+                isNewCalculation = true;
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             new CalculatorGUI().setVisible(true);
         });
     }
 }
+
+
 
 
 

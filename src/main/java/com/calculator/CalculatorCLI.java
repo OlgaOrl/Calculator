@@ -16,8 +16,14 @@ public class CalculatorCLI {
     }
     
     public static void main(String[] args) {
-        CalculatorCLI cli = new CalculatorCLI();
-        cli.run();
+        if (args.length > 0 && args[0].equals("--gui")) {
+            javax.swing.SwingUtilities.invokeLater(() -> {
+                new CalculatorGUI().setVisible(true);
+            });
+        } else {
+            CalculatorCLI cli = new CalculatorCLI();
+            cli.run();
+        }
     }
     
     public void run() {
@@ -34,18 +40,24 @@ public class CalculatorCLI {
                         performBasicCalculation();
                         break;
                     case 2:
-                        handleMemoryOperations();
+                        handleAdvancedOperations();
                         break;
                     case 3:
-                        viewMemory();
+                        handleMemoryOperations();
                         break;
                     case 4:
+                        viewMemory();
+                        break;
+                    case 5:
+                        startGUI();
+                        break;
+                    case 6:
                         System.out.println("\n🎉 Thank you for using Calculator!");
                         System.out.println("Have a great day! 😊");
                         scanner.close();
                         return;
                     default:
-                        System.out.println("💡 Please choose 1, 2, 3, or 4");
+                        System.out.println("💡 Please choose 1, 2, 3, 4, 5, or 6");
                 }
                 
             } catch (CalculatorException e) {
@@ -62,9 +74,11 @@ public class CalculatorCLI {
         System.out.println("\n" + "=".repeat(40));
         System.out.println("=== CALCULATOR MENU ===");
         System.out.println("1. Basic Calculation");
-        System.out.println("2. Memory Operations");
-        System.out.println("3. View Memory");
-        System.out.println("4. Exit");
+        System.out.println("2. Advanced Operations");
+        System.out.println("3. Memory Operations");
+        System.out.println("4. View Memory");
+        System.out.println("5. Start GUI");
+        System.out.println("6. Exit");
         if (calculator.hasMemoryValue()) {
             System.out.println("📝 Memory: " + calculator.formatResult(calculator.getMemoryValue()));
         }
@@ -72,17 +86,17 @@ public class CalculatorCLI {
     
     private int getMenuChoice() {
         while (true) {
-            System.out.print("Choose option (1-4): ");
+            System.out.print("Choose option (1-6): ");
             String input = scanner.nextLine().trim();
             
             try {
                 int choice = Integer.parseInt(input);
-                if (choice >= 1 && choice <= 4) {
+                if (choice >= 1 && choice <= 6) {
                     return choice;
                 }
-                System.out.println("💡 Please enter a number between 1 and 4");
+                System.out.println("💡 Please enter a number between 1 and 6");
             } catch (NumberFormatException e) {
-                System.out.println("💡 Please enter a valid number (1, 2, 3, or 4)");
+                System.out.println("💡 Please enter a valid number (1, 2, 3, 4, 5, or 6)");
             }
         }
     }
@@ -351,8 +365,125 @@ public class CalculatorCLI {
             }
         }
     }
+    
+    private void handleAdvancedOperations() throws CalculatorException {
+        while (true) {
+            displayAdvancedMenu();
+            String choice = getAdvancedChoice();
+            
+            switch (choice) {
+                case "1":
+                    calculateSquareRoot();
+                    break;
+                case "2":
+                    calculatePower();
+                    break;
+                case "3":
+                    calculateSquare();
+                    break;
+                case "4":
+                    calculateCubeRoot();
+                    break;
+                case "5":
+                    calculateNthRoot();
+                    break;
+                case "BACK":
+                    return;
+                default:
+                    System.out.println("💡 Please choose 1, 2, 3, 4, 5, or 'back'");
+            }
+        }
+    }
+    
+    private void displayAdvancedMenu() {
+        System.out.println("\n=== ADVANCED OPERATIONS ===");
+        System.out.println("1. Square Root (√)");
+        System.out.println("2. Power (x^y)");
+        System.out.println("3. Square (x²)");
+        System.out.println("4. Cube Root (∛)");
+        System.out.println("5. Nth Root");
+        System.out.println("Type 'back' to return to main menu");
+    }
+    
+    private String getAdvancedChoice() {
+        System.out.print("Choose operation (1-5) or 'back': ");
+        return scanner.nextLine().trim();
+    }
+    
+    private void calculateSquareRoot() throws CalculatorException {
+        System.out.println("\n--- Square Root ---");
+        double number = getNumberInput("Enter number for square root: ");
+        try {
+            double result = calculator.squareRoot(number);
+            System.out.println("✨ Result: √" + calculator.formatResult(number) + " = " + calculator.formatResult(result));
+            offerToSaveToMemory(result);
+        } catch (InvalidInputException e) {
+            System.out.println("❌ Error: " + e.getMessage());
+            System.out.println("💡 Square root is only defined for non-negative numbers.");
+            System.out.println("   Try a positive number like 16, 25, or 3.14");
+        }
+    }
+    
+    private void calculatePower() throws CalculatorException {
+        System.out.println("\n--- Power Calculation ---");
+        double base = getNumberInput("Enter base number: ");
+        double exponent = getNumberInput("Enter exponent: ");
+        double result = calculator.power(base, exponent);
+        System.out.println("✨ Result: " + calculator.formatResult(base) + "^" + calculator.formatResult(exponent) + " = " + calculator.formatResult(result));
+        offerToSaveToMemory(result);
+    }
+    
+    private void calculateSquare() throws CalculatorException {
+        System.out.println("\n--- Square ---");
+        double number = getNumberInput("Enter number to square: ");
+        double result = calculator.power(number, 2);
+        System.out.println("✨ Result: " + calculator.formatResult(number) + "² = " + calculator.formatResult(result));
+        offerToSaveToMemory(result);
+    }
+    
+    private void calculateCubeRoot() throws CalculatorException {
+        System.out.println("\n--- Cube Root ---");
+        double number = getNumberInput("Enter number for cube root: ");
+        double result = calculator.cubeRoot(number);
+        System.out.println("✨ Result: ∛" + calculator.formatResult(number) + " = " + calculator.formatResult(result));
+        offerToSaveToMemory(result);
+    }
+    
+    private void calculateNthRoot() throws CalculatorException {
+        System.out.println("\n--- Nth Root ---");
+        double number = getNumberInput("Enter number: ");
+        double n = getNumberInput("Enter root degree (n): ");
+        try {
+            double result = calculator.nthRoot(number, n);
+            System.out.println("✨ Result: " + calculator.formatResult(n) + "√" + calculator.formatResult(number) + " = " + calculator.formatResult(result));
+            offerToSaveToMemory(result);
+        } catch (InvalidInputException e) {
+            System.out.println("❌ Error: " + e.getMessage());
+            System.out.println("💡 Root degree cannot be zero. Try 2 for square root, 3 for cube root, etc.");
+        }
+    }
+    
+    private void offerToSaveToMemory(double result) throws CalculatorException {
+        System.out.print("Save result to memory? (y/n): ");
+        if (scanner.nextLine().trim().toLowerCase().startsWith("y")) {
+            calculator.memoryStore(result);
+            System.out.println("✅ Result saved to memory");
+        }
+    }
+    
+    private void startGUI() {
+        System.out.println("\n🖥️  Starting GUI Calculator...");
+        try {
+            javax.swing.SwingUtilities.invokeLater(() -> {
+                new CalculatorGUI().setVisible(true);
+            });
+            System.out.println("✅ GUI Calculator opened in new window");
+            System.out.println("💡 You can continue using CLI or switch to GUI");
+        } catch (Exception e) {
+            System.out.println("❌ Failed to start GUI: " + e.getMessage());
+            System.out.println("💡 Continuing with CLI interface");
+        }
+    }
 }
-
-
 
 

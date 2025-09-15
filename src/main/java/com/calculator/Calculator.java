@@ -206,19 +206,50 @@ public class Calculator {
     
     /**
      * Calculates square root of a number.
-     * 
-     * @param value the number to calculate square root of
-     * @return the square root of the value
-     * @throws InvalidInputException if value is negative or NaN
+     * @param number the number to find square root of
+     * @return square root of the number
+     * @throws InvalidInputException if number is negative
      */
-    public double sqrt(double value) throws InvalidInputException {
-        validateInput(value, "Square root input");
-        if (value < 0) {
-            throw new InvalidInputException("Cannot calculate square root of negative number");
+    public double squareRoot(double number) throws InvalidInputException {
+        validateInput(number, "Square root input");
+        if (number < 0) {
+            throw new InvalidInputException("Cannot calculate square root of negative number: " + number);
         }
         
-        double result = Math.sqrt(value);
-        logCalculation("√" + value + " = " + formatResult(result));
+        double result = Math.sqrt(number);
+        logCalculation("√" + number + " = " + formatResult(result));
+        return result;
+    }
+    
+    /**
+     * Calculates cube root of a number.
+     * @param number the number
+     * @return cube root of the number
+     */
+    public double cubeRoot(double number) throws InvalidInputException {
+        validateInput(number, "Cube root input");
+        
+        double result = Math.cbrt(number);
+        logCalculation("∛" + number + " = " + formatResult(result));
+        return result;
+    }
+    
+    /**
+     * Calculates nth root of a number.
+     * @param number the number
+     * @param n the root degree
+     * @return nth root of the number
+     */
+    public double nthRoot(double number, double n) throws InvalidInputException {
+        validateInput(number, "Number");
+        validateInput(n, "Root degree");
+        
+        if (n == 0) {
+            throw new InvalidInputException("Root degree cannot be zero");
+        }
+        
+        double result = Math.pow(number, 1.0 / n);
+        logCalculation(n + "√" + number + " = " + formatResult(result));
         return result;
     }
     
@@ -437,6 +468,7 @@ public class Calculator {
                            memory, history.size());
     }
 }
+
 
 
 
