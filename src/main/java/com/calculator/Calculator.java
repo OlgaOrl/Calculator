@@ -2,7 +2,8 @@ package com.calculator;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A comprehensive calculator class providing mathematical operations,
@@ -187,12 +188,12 @@ public class Calculator {
     }
     
     /**
-     * Calculates the power of a number.
+     * Calculates power of a number.
      * 
      * @param base the base number
      * @param exponent the exponent
      * @return base raised to the power of exponent
-     * @throws InvalidInputException if either parameter is NaN
+     * @throws InvalidInputException if inputs are invalid
      */
     public double power(double base, double exponent) throws InvalidInputException {
         validateInput(base, "Base");
@@ -204,21 +205,20 @@ public class Calculator {
     }
     
     /**
-     * Calculates the square root of a number.
+     * Calculates square root of a number.
      * 
-     * @param number the number to calculate square root for
-     * @return the square root of the number
-     * @throws InvalidInputException if number is negative
+     * @param value the number to calculate square root of
+     * @return the square root of the value
+     * @throws InvalidInputException if value is negative or NaN
      */
-    public double squareRoot(double number) throws InvalidInputException {
-        validateInput(number, "Number");
-        
-        if (number < 0) {
-            throw new InvalidInputException("Square root is not defined for negative numbers: " + number);
+    public double sqrt(double value) throws InvalidInputException {
+        validateInput(value, "Square root input");
+        if (value < 0) {
+            throw new InvalidInputException("Cannot calculate square root of negative number");
         }
         
-        double result = Math.sqrt(number);
-        logCalculation("√" + number + " = " + formatResult(result));
+        double result = Math.sqrt(value);
+        logCalculation("√" + value + " = " + formatResult(result));
         return result;
     }
     
@@ -303,6 +303,36 @@ public class Calculator {
     public void memoryClear() {
         this.memory = 0.0;
         logCalculation("Memory cleared");
+    }
+    
+    /**
+     * Subtracts value from memory (Memory Subtract - M-).
+     * 
+     * @param value the value to subtract from memory
+     * @throws InvalidInputException if value is NaN
+     */
+    public void memorySubtract(double value) throws InvalidInputException {
+        validateInput(value, "Memory value");
+        this.memory -= value;
+        logCalculation("Memory subtract: " + formatResult(value) + ", Total: " + formatResult(memory));
+    }
+    
+    /**
+     * Gets current memory value without affecting it.
+     * 
+     * @return the current memory value
+     */
+    public double getMemoryValue() {
+        return this.memory;
+    }
+    
+    /**
+     * Checks if memory has non-zero value.
+     * 
+     * @return true if memory contains non-zero value
+     */
+    public boolean hasMemoryValue() {
+        return this.memory != 0.0;
     }
     
     // History Operations
@@ -407,5 +437,7 @@ public class Calculator {
                            memory, history.size());
     }
 }
+
+
 
 

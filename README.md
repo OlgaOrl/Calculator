@@ -39,23 +39,59 @@ mvn clean compile exec:java -Dexec.mainClass="com.calculator.CalculatorCLI"
 ## Features ✨
 
 - **Basic Math**: Add, subtract, multiply, divide
+- **Memory Functions**: Store, recall, clear, add to/subtract from memory
 - **Advanced Functions**: Powers, square roots, percentages
 - **Memory**: Store and recall numbers
 - **History**: See your previous calculations
 - **Error Protection**: Won't crash on invalid input
 - **Smart CLI**: Improved command-line experience with helpful guidance
 
-## Examples 📝
+### Memory Operations
+- **MS (Memory Store)**: Save a number to memory
+- **MR (Memory Recall)**: Retrieve and use number from memory  
+- **MC (Memory Clear)**: Clear memory (set to zero)
+- **M+ (Memory Add)**: Add a number to current memory value
+- **M- (Memory Subtract)**: Subtract a number from current memory value
 
-### Simple Calculations
-- `5 + 3 = 8`
-- `10 × 2.5 = 25`
-- `100 ÷ 4 = 25`
+## Usage Examples 📝
 
-### Advanced Features
-- `15% of 200 = 30`
-- `√16 = 4`
-- `2³ = 8`
+### Memory Operations Example
+```
+=== CALCULATOR MENU ===
+1. Basic Calculation
+2. Memory Operations  
+3. View Memory
+4. Exit
+📝 Memory: 42.5
+
+Choose option: 2
+
+=== MEMORY OPERATIONS ===
+MS - Memory Store (save a number)
+MR - Memory Recall (use saved number)
+MC - Memory Clear (clear memory)
+M+ - Memory Add (add to memory)
+M- - Memory Subtract (subtract from memory)
+📝 Current Memory: 42.5
+
+Choose memory operation: M+
+Current memory: 42.5
+Enter number to add to memory: 7.5
+✅ Added 7.5 to memory
+📝 New memory value: 50
+```
+
+### Using Memory in Calculations
+```
+=== BASIC CALCULATION ===
+Use memory value 50? (y/n): y
+Using 50 as first number
+Choose operation (+, -, *, /): *
+Enter second number: 2
+✨ Result: 50 * 2 = 100
+Save result to memory? (y/n): y
+✅ Result saved to memory
+```
 
 ## Troubleshooting 🔧
 

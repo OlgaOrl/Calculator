@@ -1,13 +1,18 @@
 package com.calculator;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.params.provider.CsvSource;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Comprehensive unit tests for the Calculator class.
@@ -170,26 +175,73 @@ class CalculatorTest {
         assertThrows(InvalidInputException.class, () -> calculator.factorial(25));
     }
     
-    // Memory Operations Tests
+    // Enhanced Memory Operations Tests
     
     @Test
-    void testMemoryOperations() throws CalculatorException {
-        // Test store and recall
+    @DisplayName("User can save and recall calculation results")
+    void userCanSaveAndRecallResults() throws CalculatorException {
+        // Store value
         calculator.memoryStore(42.5);
         assertEquals(42.5, calculator.memoryRecall(), DELTA);
         
-        // Test memory add
-        calculator.memoryAdd(7.5);
-        assertEquals(50.0, calculator.memoryRecall(), DELTA);
-        
-        // Test memory clear
-        calculator.memoryClear();
-        assertEquals(0.0, calculator.memoryRecall(), DELTA);
+        // Memory persists during other calculations
+        calculator.add(10, 5);
+        assertEquals(42.5, calculator.memoryRecall(), DELTA);
+        assertTrue(calculator.hasMemoryValue());
     }
     
     @Test
-    void testMemoryStoreNaN() {
+    @DisplayName("Memory works with negative numbers")
+    void memoryWorksWithNegativeNumbers() throws CalculatorException {
+        calculator.memoryStore(-15.5);
+        assertEquals(-15.5, calculator.memoryRecall(), DELTA);
+        
+        calculator.memoryAdd(-5.0);
+        assertEquals(-20.5, calculator.memoryRecall(), DELTA);
+    }
+    
+    @Test
+    @DisplayName("Memory works with decimal numbers")
+    void memoryWorksWithDecimals() throws CalculatorException {
+        calculator.memoryStore(3.14159);
+        assertEquals(3.14159, calculator.memoryRecall(), DELTA);
+        
+        calculator.memoryAdd(2.71828);
+        assertEquals(5.85987, calculator.memoryRecall(), 0.00001);
+    }
+    
+    @Test
+    @DisplayName("Memory starts empty when calculator starts")
+    void memoryStartsEmpty() {
+        assertEquals(0.0, calculator.memoryRecall(), DELTA);
+        assertFalse(calculator.hasMemoryValue());
+    }
+    
+    @Test
+    @DisplayName("Memory subtract works correctly")
+    void memorySubtractWorks() throws CalculatorException {
+        calculator.memoryStore(20.0);
+        calculator.memorySubtract(8.0);
+        assertEquals(12.0, calculator.memoryRecall(), DELTA);
+        
+        calculator.memorySubtract(-3.0); // Subtracting negative = adding
+        assertEquals(15.0, calculator.memoryRecall(), DELTA);
+    }
+    
+    @Test
+    @DisplayName("Memory works with very large numbers")
+    void memoryWorksWithLargeNumbers() throws CalculatorException {
+        double largeNumber = 1.23456789e100;
+        calculator.memoryStore(largeNumber);
+        assertEquals(largeNumber, calculator.memoryRecall(), largeNumber * 1e-10);
+    }
+    
+    @Test
+    @DisplayName("Memory operations validate input")
+    void memoryOperationsValidateInput() {
         assertThrows(InvalidInputException.class, () -> calculator.memoryStore(Double.NaN));
+        assertThrows(InvalidInputException.class, () -> calculator.memoryAdd(Double.NaN));
+        assertThrows(InvalidInputException.class, () -> calculator.memorySubtract(Double.NaN));
     }
     
     // History Tests
@@ -315,5 +367,6 @@ class CalculatorTest {
         }
     }
 }
+
 
 

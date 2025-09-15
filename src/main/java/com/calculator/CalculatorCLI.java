@@ -26,30 +26,26 @@ public class CalculatorCLI {
         
         while (true) {
             try {
-                System.out.println("\n" + "=".repeat(40));
+                displayMainMenu();
+                int choice = getMenuChoice();
                 
-                double firstNumber = getNumberInput("Enter first number: ");
-                String operation = getOperationInput();
-                double secondNumber = getNumberInput("Enter second number: ");
-                
-                // Handle division by zero with helpful recovery
-                if (operation.equals("/") && secondNumber == 0.0) {
-                    displayDivisionByZeroHelp();
-                    System.out.print("Would you like to try a different second number? (y/n): ");
-                    String retry = scanner.nextLine().trim().toLowerCase();
-                    
-                    if (retry.equals("y") || retry.equals("yes")) {
-                        secondNumber = getNumberInput("Enter different second number: ");
-                    } else {
-                        continue; // Skip this calculation
-                    }
-                }
-                
-                double result = performCalculation(firstNumber, operation, secondNumber);
-                displayResult(firstNumber, operation, secondNumber, result);
-                
-                if (!askForAnotherCalculation()) {
-                    break;
+                switch (choice) {
+                    case 1:
+                        performBasicCalculation();
+                        break;
+                    case 2:
+                        handleMemoryOperations();
+                        break;
+                    case 3:
+                        viewMemory();
+                        break;
+                    case 4:
+                        System.out.println("\n🎉 Thank you for using Calculator!");
+                        System.out.println("Have a great day! 😊");
+                        scanner.close();
+                        return;
+                    default:
+                        System.out.println("💡 Please choose 1, 2, 3, or 4");
                 }
                 
             } catch (CalculatorException e) {
@@ -60,10 +56,194 @@ public class CalculatorCLI {
                 System.out.println("💡 Let's continue with a fresh calculation.");
             }
         }
+    }
+    
+    private void displayMainMenu() {
+        System.out.println("\n" + "=".repeat(40));
+        System.out.println("=== CALCULATOR MENU ===");
+        System.out.println("1. Basic Calculation");
+        System.out.println("2. Memory Operations");
+        System.out.println("3. View Memory");
+        System.out.println("4. Exit");
+        if (calculator.hasMemoryValue()) {
+            System.out.println("📝 Memory: " + calculator.formatResult(calculator.getMemoryValue()));
+        }
+    }
+    
+    private int getMenuChoice() {
+        while (true) {
+            System.out.print("Choose option (1-4): ");
+            String input = scanner.nextLine().trim();
+            
+            try {
+                int choice = Integer.parseInt(input);
+                if (choice >= 1 && choice <= 4) {
+                    return choice;
+                }
+                System.out.println("💡 Please enter a number between 1 and 4");
+            } catch (NumberFormatException e) {
+                System.out.println("💡 Please enter a valid number (1, 2, 3, or 4)");
+            }
+        }
+    }
+    
+    private void performBasicCalculation() throws CalculatorException {
+        System.out.println("\n=== BASIC CALCULATION ===");
         
-        System.out.println("\n🎉 Thank you for using Calculator!");
-        System.out.println("Have a great day! 😊");
-        scanner.close();
+        double firstNumber = getFirstNumber();
+        String operation = getOperationInput();
+        double secondNumber = getNumberInput("Enter second number: ");
+        
+        // Handle division by zero
+        if (operation.equals("/") && secondNumber == 0.0) {
+            displayDivisionByZeroHelp();
+            System.out.print("Would you like to try a different second number? (y/n): ");
+            String retry = scanner.nextLine().trim().toLowerCase();
+            
+            if (retry.equals("y") || retry.equals("yes")) {
+                secondNumber = getNumberInput("Enter different second number: ");
+            } else {
+                return;
+            }
+        }
+        
+        double result = performCalculation(firstNumber, operation, secondNumber);
+        displayResult(firstNumber, operation, secondNumber, result);
+        
+        // Offer to save result to memory
+        System.out.print("Save result to memory? (y/n): ");
+        if (scanner.nextLine().trim().toLowerCase().startsWith("y")) {
+            calculator.memoryStore(result);
+            System.out.println("✅ Result saved to memory");
+        }
+    }
+    
+    private double getFirstNumber() {
+        if (calculator.hasMemoryValue()) {
+            System.out.print("Use memory value " + calculator.formatResult(calculator.getMemoryValue()) + "? (y/n): ");
+            if (scanner.nextLine().trim().toLowerCase().startsWith("y")) {
+                System.out.println("Using " + calculator.formatResult(calculator.getMemoryValue()) + " as first number");
+                return calculator.memoryRecall();
+            }
+        }
+        return getNumberInput("Enter first number: ");
+    }
+    
+    private void handleMemoryOperations() throws CalculatorException {
+        while (true) {
+            displayMemoryMenu();
+            String choice = getMemoryChoice();
+            
+            switch (choice.toUpperCase()) {
+                case "MS":
+                    memoryStore();
+                    break;
+                case "MR":
+                    memoryRecall();
+                    break;
+                case "MC":
+                    memoryClear();
+                    break;
+                case "M+":
+                    memoryAdd();
+                    break;
+                case "M-":
+                    memorySubtract();
+                    break;
+                case "BACK":
+                    return;
+                default:
+                    System.out.println("💡 Please choose MS, MR, MC, M+, M-, or 'back'");
+            }
+        }
+    }
+    
+    private void displayMemoryMenu() {
+        System.out.println("\n=== MEMORY OPERATIONS ===");
+        System.out.println("MS - Memory Store (save a number)");
+        System.out.println("MR - Memory Recall (use saved number)");
+        System.out.println("MC - Memory Clear (clear memory)");
+        System.out.println("M+ - Memory Add (add to memory)");
+        System.out.println("M- - Memory Subtract (subtract from memory)");
+        System.out.println("📝 Current Memory: " + calculator.formatResult(calculator.getMemoryValue()));
+    }
+    
+    private String getMemoryChoice() {
+        System.out.print("Choose memory operation (MS/MR/MC/M+/M-) or 'back': ");
+        return scanner.nextLine().trim();
+    }
+    
+    private void memoryStore() throws CalculatorException {
+        System.out.println("\n--- Memory Store ---");
+        double value = getNumberInput("Enter number to store in memory: ");
+        calculator.memoryStore(value);
+        System.out.println("✅ Stored " + calculator.formatResult(value) + " in memory");
+    }
+    
+    private void memoryRecall() throws CalculatorException {
+        System.out.println("\n--- Memory Recall ---");
+        double memoryValue = calculator.memoryRecall();
+        System.out.println("📝 Memory contains: " + calculator.formatResult(memoryValue));
+        
+        if (memoryValue != 0.0) {
+            System.out.print("Use this number in calculation? (y/n): ");
+            if (scanner.nextLine().trim().toLowerCase().startsWith("y")) {
+                useMemoryInCalculation(memoryValue);
+            }
+        } else {
+            System.out.println("💡 Memory is empty. Use MS to store a number first.");
+        }
+    }
+    
+    private void useMemoryInCalculation(double memoryValue) throws CalculatorException {
+        System.out.println("Using " + calculator.formatResult(memoryValue) + " as first number");
+        String operation = getOperationInput();
+        double secondNumber = getNumberInput("Enter second number: ");
+        
+        double result = performCalculation(memoryValue, operation, secondNumber);
+        displayResult(memoryValue, operation, secondNumber, result);
+        
+        System.out.print("Store result in memory? (y/n): ");
+        if (scanner.nextLine().trim().toLowerCase().startsWith("y")) {
+            calculator.memoryStore(result);
+            System.out.println("✅ Result stored in memory");
+        }
+    }
+    
+    private void memoryClear() {
+        System.out.println("\n--- Memory Clear ---");
+        calculator.memoryClear();
+        System.out.println("✅ Memory cleared (set to 0)");
+    }
+    
+    private void memoryAdd() throws CalculatorException {
+        System.out.println("\n--- Memory Add ---");
+        System.out.println("Current memory: " + calculator.formatResult(calculator.getMemoryValue()));
+        double value = getNumberInput("Enter number to add to memory: ");
+        calculator.memoryAdd(value);
+        System.out.println("✅ Added " + calculator.formatResult(value) + " to memory");
+        System.out.println("📝 New memory value: " + calculator.formatResult(calculator.getMemoryValue()));
+    }
+    
+    private void memorySubtract() throws CalculatorException {
+        System.out.println("\n--- Memory Subtract ---");
+        System.out.println("Current memory: " + calculator.formatResult(calculator.getMemoryValue()));
+        double value = getNumberInput("Enter number to subtract from memory: ");
+        calculator.memorySubtract(value);
+        System.out.println("✅ Subtracted " + calculator.formatResult(value) + " from memory");
+        System.out.println("📝 New memory value: " + calculator.formatResult(calculator.getMemoryValue()));
+    }
+    
+    private void viewMemory() {
+        System.out.println("\n=== MEMORY STATUS ===");
+        double memoryValue = calculator.getMemoryValue();
+        System.out.println("📝 Current Memory: " + calculator.formatResult(memoryValue));
+        
+        if (memoryValue == 0.0) {
+            System.out.println("💡 Memory is empty. Use Memory Operations → MS to store a number.");
+        } else {
+            System.out.println("✅ Memory contains a value. Use MR to recall it in calculations.");
+        }
     }
     
     private double performCalculation(double a, String operation, double b) throws CalculatorException {
@@ -172,5 +352,7 @@ public class CalculatorCLI {
         }
     }
 }
+
+
 
 
