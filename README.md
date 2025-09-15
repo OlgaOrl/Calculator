@@ -29,6 +29,13 @@ If you prefer typing, run:
 mvn clean compile exec:java -Dexec.mainClass="com.calculator.CalculatorCLI"
 ```
 
+**New in CLI v2.0:**
+- 🎯 **Smart Error Messages**: Clear explanations when you enter invalid data
+- 🔄 **Recovery Options**: Automatic retry for division by zero
+- 💡 **Helpful Examples**: Shows you exactly what to type
+- 😊 **Friendly Interface**: Emojis and encouraging messages
+- ⚡ **Better Input Validation**: Handles empty inputs and typos gracefully
+
 ## Features ✨
 
 - **Basic Math**: Add, subtract, multiply, divide
@@ -36,6 +43,7 @@ mvn clean compile exec:java -Dexec.mainClass="com.calculator.CalculatorCLI"
 - **Memory**: Store and recall numbers
 - **History**: See your previous calculations
 - **Error Protection**: Won't crash on invalid input
+- **Smart CLI**: Improved command-line experience with helpful guidance
 
 ## Examples 📝
 
@@ -56,10 +64,14 @@ mvn clean compile exec:java -Dexec.mainClass="com.calculator.CalculatorCLI"
 - Check that you're in the correct folder
 - Try running `java -version` to verify Java installation
 
-**Need help?**
-- All calculations are shown in the display
-- Use C button to clear and start fresh
-- Error messages will guide you if something goes wrong
+**CLI Issues?**
+- Use: `mvn clean compile` then `java -cp target/classes com.calculator.CalculatorCLI`
+- Or try: `mvn exec:java -Dexec.mainClass=com.calculator.CalculatorCLI` (without quotes)
+
+**Need help with calculations?**
+- CLI shows helpful examples for invalid inputs
+- All error messages include suggestions
+- Use C button in GUI to clear and start fresh
 
 ---
 
