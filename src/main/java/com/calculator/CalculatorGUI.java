@@ -7,9 +7,15 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
+import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -17,13 +23,17 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
-public class CalculatorGUI extends JFrame implements ActionListener {
+public class CalculatorGUI extends JFrame implements ActionListener, KeyListener {
     
     private JTextField display;
+    private JLabel operationLabel;
     private JLabel memoryLabel;
+    private JLabel statusLabel;
     private Calculator calculator;
     private double firstNumber = 0;
     private String operation = "";
@@ -32,26 +42,119 @@ public class CalculatorGUI extends JFrame implements ActionListener {
     public CalculatorGUI() {
         calculator = new Calculator();
         initializeGUI();
+        setupKeyboardShortcuts();
     }
     
     private void initializeGUI() {
-        setTitle("🧮 Advanced Calculator");
+        setTitle("🧮 Advanced Calculator - Use keyboard for faster calculations");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(new Color(45, 45, 45));
         
-        // Create display panel with memory indicator
+        // Create display panel with memory and status indicators
         JPanel displayPanel = createDisplayPanel();
         mainPanel.add(displayPanel, BorderLayout.NORTH);
         
         JPanel buttonPanel = createButtonPanel();
         mainPanel.add(buttonPanel, BorderLayout.CENTER);
         
+        // Status bar for keyboard feedback
+        statusLabel = new JLabel("Ready - Use keyboard or mouse");
+        statusLabel.setForeground(Color.LIGHT_GRAY);
+        statusLabel.setFont(new Font("Arial", Font.PLAIN, 11));
+        statusLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        mainPanel.add(statusLabel, BorderLayout.SOUTH);
+        
         add(mainPanel);
         pack();
         setLocationRelativeTo(null);
+        
+        // Make focusable for keyboard input
+        setFocusable(true);
+        addKeyListener(this);
+        display.addKeyListener(this);
+        
+        // Request focus for keyboard input
+        SwingUtilities.invokeLater(() -> {
+            requestFocus();
+            display.requestFocus();
+        });
+    }
+    
+    private void setupKeyboardShortcuts() {
+        JComponent rootPane = getRootPane();
+        InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = rootPane.getActionMap();
+        
+        // Memory shortcuts
+        inputMap.put(KeyStroke.getKeyStroke("ctrl M"), "memoryStore");
+        actionMap.put("memoryStore", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    double current = Double.parseDouble(display.getText());
+                    calculator.memoryStore(current);
+                    updateStatusLabel("Memory stored: " + calculator.formatResult(current));
+                    updateMemoryDisplay();
+                } catch (Exception ex) {
+                    showError(ex.getMessage());
+                }
+            }
+        });
+        
+        inputMap.put(KeyStroke.getKeyStroke("ctrl R"), "memoryRecall");
+        actionMap.put("memoryRecall", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                double memValue = calculator.memoryRecall();
+                display.setText(calculator.formatResult(memValue));
+                updateStatusLabel("Memory recalled: " + calculator.formatResult(memValue));
+                isNewCalculation = true;
+            }
+        });
+        
+        inputMap.put(KeyStroke.getKeyStroke("ctrl shift C"), "memoryClear");
+        actionMap.put("memoryClear", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                calculator.memoryClear();
+                updateStatusLabel("Memory cleared");
+                updateMemoryDisplay();
+            }
+        });
+        
+        // Constants shortcuts
+        inputMap.put(KeyStroke.getKeyStroke("ctrl P"), "insertPi");
+        actionMap.put("insertPi", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                display.setText(calculator.formatResult(Math.PI));
+                updateStatusLabel("π inserted: " + calculator.formatResult(Math.PI));
+                isNewCalculation = true;
+            }
+        });
+        
+        inputMap.put(KeyStroke.getKeyStroke("ctrl E"), "insertE");
+        actionMap.put("insertE", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                display.setText(calculator.formatResult(Math.E));
+                updateStatusLabel("e inserted: " + calculator.formatResult(Math.E));
+                isNewCalculation = true;
+            }
+        });
+        
+        // Function shortcuts
+        inputMap.put(KeyStroke.getKeyStroke("ctrl S"), "squareRoot");
+        actionMap.put("squareRoot", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                handleSquareRoot();
+            }
+        });
+        
+        inputMap.put(KeyStroke.getKeyStroke("F1"), "showHelp");
+        actionMap.put("showHelp", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                showHelp();
+            }
+        });
     }
     
     private JPanel createDisplayPanel() {
@@ -65,6 +168,13 @@ public class CalculatorGUI extends JFrame implements ActionListener {
         memoryLabel.setBorder(BorderFactory.createEmptyBorder(5, 15, 0, 15));
         panel.add(memoryLabel, BorderLayout.NORTH);
         
+        // Operation indicator
+        operationLabel = new JLabel("", SwingConstants.CENTER);
+        operationLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        operationLabel.setForeground(Color.ORANGE);
+        operationLabel.setBorder(BorderFactory.createEmptyBorder(0, 15, 5, 15));
+        panel.add(operationLabel, BorderLayout.CENTER);
+        
         // Main display
         display = new JTextField("0");
         display.setFont(new Font("Arial", Font.BOLD, 24));
@@ -74,7 +184,7 @@ public class CalculatorGUI extends JFrame implements ActionListener {
         display.setForeground(Color.WHITE);
         display.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         display.setPreferredSize(new Dimension(350, 60));
-        panel.add(display, BorderLayout.CENTER);
+        panel.add(display, BorderLayout.SOUTH);
         
         return panel;
     }
@@ -87,7 +197,7 @@ public class CalculatorGUI extends JFrame implements ActionListener {
         String[] buttons = {
             "MC", "MR", "MS", "M+", "M-",
             "C", "CE", "√", "x²", "1/x",
-            "∛", "xʸ", "ⁿ√", "%", "±",
+            "∛", "x^y", "n√", "%", "±",
             "7", "8", "9", "÷", "Help",
             "4", "5", "6", "×", "Clear H",
             "1", "2", "3", "-", "",
@@ -225,9 +335,24 @@ public class CalculatorGUI extends JFrame implements ActionListener {
     }
     
     private void handleOperation(String op) {
+        if (!operation.isEmpty()) {
+            handleEquals();
+        }
+        
         firstNumber = Double.parseDouble(display.getText());
         operation = op;
         isNewCalculation = true;
+        
+        // Update operation display with simple symbols
+        String operationSymbol = switch (op) {
+            case "+" -> "+";
+            case "-" -> "-";
+            case "×" -> "×";
+            case "÷" -> "÷";
+            case "power" -> "^";
+            default -> op;
+        };
+        operationLabel.setText(calculator.formatResult(firstNumber) + " " + operationSymbol);
     }
     
     private void handleEquals() {
@@ -256,6 +381,7 @@ public class CalculatorGUI extends JFrame implements ActionListener {
                 
                 display.setText(calculator.formatResult(result));
                 operation = "";
+                operationLabel.setText(""); // Clear operation display
                 isNewCalculation = true;
                 
             } catch (CalculatorException ex) {
@@ -269,6 +395,7 @@ public class CalculatorGUI extends JFrame implements ActionListener {
         display.setText("0");
         firstNumber = 0;
         operation = "";
+        operationLabel.setText(""); // Clear operation display
         isNewCalculation = true;
     }
     
@@ -284,25 +411,37 @@ public class CalculatorGUI extends JFrame implements ActionListener {
         display.setText(calculator.formatResult(current));
     }
     
-    private void handleSquareRoot() throws CalculatorException {
-        double current = Double.parseDouble(display.getText());
-        double result = calculator.squareRoot(current);
-        display.setText(calculator.formatResult(result));
-        isNewCalculation = true;
+    private void handleSquareRoot() {
+        try {
+            double current = Double.parseDouble(display.getText());
+            double result = calculator.squareRoot(current);
+            display.setText(calculator.formatResult(result));
+            isNewCalculation = true;
+        } catch (CalculatorException ex) {
+            showError(ex.getMessage());
+        }
     }
     
-    private void handleSquare() throws CalculatorException {
-        double current = Double.parseDouble(display.getText());
-        double result = calculator.power(current, 2);
-        display.setText(calculator.formatResult(result));
-        isNewCalculation = true;
+    private void handleSquare() {
+        try {
+            double current = Double.parseDouble(display.getText());
+            double result = calculator.power(current, 2);
+            display.setText(calculator.formatResult(result));
+            isNewCalculation = true;
+        } catch (CalculatorException ex) {
+            showError(ex.getMessage());
+        }
     }
     
-    private void handleReciprocal() throws CalculatorException {
-        double current = Double.parseDouble(display.getText());
-        double result = calculator.divide(1, current);
-        display.setText(calculator.formatResult(result));
-        isNewCalculation = true;
+    private void handleReciprocal() {
+        try {
+            double current = Double.parseDouble(display.getText());
+            double result = calculator.divide(1, current);
+            display.setText(calculator.formatResult(result));
+            isNewCalculation = true;
+        } catch (CalculatorException ex) {
+            showError(ex.getMessage());
+        }
     }
     
     private void handleMemoryOperation(String command) throws CalculatorException {
@@ -370,11 +509,15 @@ public class CalculatorGUI extends JFrame implements ActionListener {
         }
     }
     
-    private void handleCubeRoot() throws CalculatorException {
-        double current = Double.parseDouble(display.getText());
-        double result = calculator.cubeRoot(current);
-        display.setText(calculator.formatResult(result));
-        isNewCalculation = true;
+    private void handleCubeRoot() {
+        try {
+            double current = Double.parseDouble(display.getText());
+            double result = calculator.cubeRoot(current);
+            display.setText(calculator.formatResult(result));
+            isNewCalculation = true;
+        } catch (CalculatorException ex) {
+            showError(ex.getMessage());
+        }
     }
     
     private void handlePowerOperation() {
@@ -424,15 +567,38 @@ public class CalculatorGUI extends JFrame implements ActionListener {
     
     private void showHelp() {
         String helpText = """
-            🧮 CALCULATOR HELP
+            🧮 CALCULATOR HELP & KEYBOARD SHORTCUTS
             
-            📱 BASIC OPERATIONS:
-            • Numbers: Click 0-9 or use keyboard
-            • Operations: +, -, ×, ÷
-            • Decimal: . for decimal numbers
-            • Clear: C to start over
+            ⌨️ KEYBOARD SHORTCUTS:
             
-            🔢 ADVANCED OPERATIONS:
+            📱 NUMBER INPUT:
+            • 0-9 keys - Type numbers directly
+            • . key - Decimal point
+            • Backspace - Delete last digit
+            
+            🔢 OPERATIONS:
+            • + key - Addition
+            • - key - Subtraction
+            • * key - Multiplication
+            • / key - Division
+            • Enter - Calculate result
+            • Esc or C - Clear calculation
+            
+            💾 MEMORY FUNCTIONS:
+            • Ctrl+M - Memory Store (MS)
+            • Ctrl+R - Memory Recall (MR)
+            • Ctrl+Shift+C - Memory Clear (MC)
+            • M+ and M- buttons for add/subtract
+            
+            🔢 CONSTANTS:
+            • Ctrl+P - Insert π (Pi = 3.14159...)
+            • Ctrl+E - Insert e (Euler = 2.71828...)
+            
+            🔧 ADVANCED FUNCTIONS:
+            • Ctrl+S - Square root (√)
+            • F1 - Show this help
+            
+            🖱️ MOUSE OPERATIONS:
             • √ - Square root
             • ∛ - Cube root  
             • x² - Square a number
@@ -442,20 +608,15 @@ public class CalculatorGUI extends JFrame implements ActionListener {
             • % - Percentage
             • ± - Change sign
             
-            💾 MEMORY FUNCTIONS:
-            • MS - Memory Store
-            • MR - Memory Recall
-            • MC - Memory Clear
-            • M+ - Add to memory
-            • M- - Subtract from memory
-            
             📊 HISTORY:
             • History - View calculations
             • Clear H - Clear history
             
             💡 TIPS:
-            • Use keyboard for faster input
-            • Memory value shown at top
+            • Mix keyboard and mouse as you prefer
+            • Status bar shows confirmation of key presses
+            • All shortcuts work the same as clicking buttons
+            • Memory value shown at top when active
             • History tracks all calculations
             """;
         
@@ -466,9 +627,88 @@ public class CalculatorGUI extends JFrame implements ActionListener {
         textArea.setForeground(Color.WHITE);
         
         JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setPreferredSize(new Dimension(450, 400));
+        scrollPane.setPreferredSize(new Dimension(500, 500));
         
-        JOptionPane.showMessageDialog(this, scrollPane, "Calculator Help", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, scrollPane, "Calculator Help & Keyboard Shortcuts", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    @Override
+    public void keyPressed(KeyEvent e) {
+        char keyChar = e.getKeyChar();
+        int keyCode = e.getKeyCode();
+        
+        try {
+            if (Character.isDigit(keyChar)) {
+                handleNumber(String.valueOf(keyChar));
+                updateStatusLabel("Number entered: " + keyChar);
+            } else if (keyChar == '.') {
+                handleDecimal();
+                updateStatusLabel("Decimal point added");
+            } else if (keyChar == '+') {
+                handleOperation("+");
+                updateStatusLabel("Operation: Addition");
+            } else if (keyChar == '-') {
+                handleOperation("-");
+                updateStatusLabel("Operation: Subtraction");
+            } else if (keyChar == '*') {
+                handleOperation("×");
+                updateStatusLabel("Operation: Multiplication");
+            } else if (keyChar == '/') {
+                handleOperation("÷");
+                updateStatusLabel("Operation: Division");
+            } else if (keyCode == KeyEvent.VK_ENTER) {
+                handleEquals();
+                updateStatusLabel("Result calculated");
+            } else if (keyCode == KeyEvent.VK_ESCAPE || keyChar == 'c' || keyChar == 'C') {
+                handleClear();
+                updateStatusLabel("Calculation cleared");
+            } else if (keyCode == KeyEvent.VK_BACK_SPACE) {
+                handleBackspace();
+                updateStatusLabel("Last digit deleted");
+            }
+        } catch (Exception ex) {
+            showError(ex.getMessage());
+        }
+    }
+    
+    private void handleBackspace() {
+        String current = display.getText();
+        if (current.length() > 1 && !current.equals("0")) {
+            display.setText(current.substring(0, current.length() - 1));
+        } else {
+            display.setText("0");
+            isNewCalculation = true;
+        }
+    }
+    
+    private void updateStatusLabel(String message) {
+        statusLabel.setText(message);
+        statusLabel.setForeground(Color.CYAN);
+        
+        // Clear status message after 3 seconds
+        Timer timer = new Timer(3000, e -> {
+            statusLabel.setText("Ready - Use keyboard or mouse");
+            statusLabel.setForeground(Color.LIGHT_GRAY);
+        });
+        timer.setRepeats(false);
+        timer.start();
+    }
+    
+    private void showError(String message) {
+        display.setText("Error");
+        updateStatusLabel("Error: " + message);
+        statusLabel.setForeground(Color.RED);
+        isNewCalculation = true;
+    }
+    
+    @Override
+    public void keyReleased(KeyEvent e) {
+        // Not used but required by KeyListener interface
+    }
+    
+    @Override
+    public void keyTyped(KeyEvent e) {
+        // Not used but required by KeyListener interface
     }
     
     public static void main(String[] args) {
@@ -477,9 +717,6 @@ public class CalculatorGUI extends JFrame implements ActionListener {
         });
     }
 }
-
-
-
 
 
 

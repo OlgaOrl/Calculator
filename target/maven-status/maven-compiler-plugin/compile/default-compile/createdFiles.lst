@@ -1,7 +1,14 @@
 com\calculator\help\HelpTopic.class
+com\calculator\CalculatorGUI$1.class
+com\calculator\CalculatorGUI$6.class
+com\calculator\DivisionByZeroException.class
+com\calculator\CalculatorGUI$2.class
+com\calculator\CalculatorGUI$7.class
+com\calculator\CalculatorGUI$4.class
 com\calculator\CalculatorCLI.class
+com\calculator\CalculatorGUI$3.class
 com\calculator\CalculatorGUI.class
 com\calculator\InvalidInputException.class
-com\calculator\DivisionByZeroException.class
 com\calculator\Calculator.class
+com\calculator\CalculatorGUI$5.class
 com\calculator\CalculatorException.class

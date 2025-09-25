@@ -31,13 +31,27 @@ mvn clean compile exec:java
 ### Calculator Window (GUI)
 - **Numbers**: Click 0-9 buttons or use your keyboard
 - **Operations**: Click +, -, ×, ÷ for calculations
+- **Operation Display**: See current operation with symbols (78 +, 45 ×, etc.) above the main display
 - **Clear**: Press C to start over
 - **Sign**: Press ± to make numbers positive/negative  
 - **Percent**: Press % for percentage calculations
 - **Decimal**: Press . for decimal numbers
-- **Advanced**: √ (square root), ∛ (cube root), x² (square), xʸ (power), ⁿ√ (nth root), 1/x (reciprocal)
+- **Advanced**: √ (square root), ∛ (cube root), x² (square), x^y (power), n√ (nth root), 1/x (reciprocal)
 - **Help**: Click Help button for detailed instructions
 - **History**: View and clear calculation history
+- **Memory Indicator**: Shows current memory value at top right
+
+### Visual Interface Features
+- **Dark Theme**: Modern dark interface with color-coded buttons
+- **Live Operation Display**: Shows "78 +" or "45 ×" while you're calculating
+- **Memory Status**: "Memory: 0" changes to cyan when memory contains a value
+- **Status Bar**: Shows keyboard shortcuts and operation confirmations
+- **Color-Coded Buttons**:
+  - Numbers (0-9): Dark gray
+  - Operations (+, -, ×, ÷): Orange
+  - Memory (MC, MR, MS, M+, M-): Blue
+  - Functions (√, x², %): Purple
+  - Other controls: Light gray
 
 ### Command Line Version
 Simple menu-driven interface for basic calculations:
@@ -52,21 +66,23 @@ Choose option:
 
 - **Dual Interface**: Both beautiful GUI and simple CLI
 - **Basic Math**: Add, subtract, multiply, divide
+- **Live Operation Display**: See what operation you're performing in real-time
 - **Advanced Functions**: Powers, square roots, cube roots, nth roots, reciprocals
 - **Memory Functions**: Store, recall, clear, add to/subtract from memory
 - **History**: See your previous calculations (GUI only)
 - **Error Protection**: Won't crash on invalid input
 - **Help System**: Built-in help with detailed instructions
 - **Visual Design**: Modern dark theme with color-coded buttons
+- **Real-time Feedback**: Operation display shows current calculation state
 
 ### GUI Button Layout
 ```
 ┌─────┬─────┬─────┬─────┬─────┐
-│ MC  │ MR  │ MS  │ M+  │ M-  │ Memory Functions
+│ MC  │ MR  │ MS  │ M+  │ M-  │ Memory Functions (Blue)
 ├─────┼─────┼─────┼─────┼─────┤
-│  C  │ CE  │  √  │ x²  │ 1/x │ Clear & Advanced
+│  C  │ CE  │  √  │ x²  │ 1/x │ Clear & Advanced (Purple)
 ├─────┼─────┼─────┼─────┼─────┤
-│  ∛  │ xʸ  │ ⁿ√  │  %  │  ±  │ Advanced Functions
+│  ∛  │ x^y │ n√  │  %  │  ±  │ Advanced Functions (Purple)
 ├─────┼─────┼─────┼─────┼─────┤
 │  7  │  8  │  9  │  ÷  │Help │ Numbers & Operations
 ├─────┼─────┼─────┼─────┼─────┤
@@ -74,8 +90,21 @@ Choose option:
 ├─────┼─────┼─────┼─────┼─────┤
 │  1  │  2  │  3  │  -  │     │ Numbers & Operations
 ├─────┼─────┼─────┼─────┼─────┤
-│  0  │  .  │  =  │  +  │     │ Numbers & Operations
+│  0  │  .  │  =  │  +  │     │ Numbers & Operations (Orange)
 └─────┴─────┴─────┴─────┴─────┘
+```
+
+### Display Layout
+```
+┌─────────────────────────────────────┐
+│                    Memory: 0        │ Memory Indicator
+├─────────────────────────────────────┤
+│              78 +                   │ Operation Display
+├─────────────────────────────────────┤
+│                                  78 │ Main Display
+└─────────────────────────────────────┘
+│ Ready - Use keyboard or mouse       │ Status Bar
+└─────────────────────────────────────┘
 ```
 
 ### Memory Operations
@@ -89,8 +118,8 @@ Choose option:
 - **√**: Square root calculation
 - **∛**: Cube root calculation  
 - **x²**: Square a number
-- **xʸ**: Raise to any power
-- **ⁿ√**: Calculate nth root
+- **x^y**: Raise to any power
+- **n√**: Calculate nth root
 - **1/x**: Reciprocal (1 divided by number)
 
 ### Mathematical Constants
@@ -106,10 +135,29 @@ The calculator includes high-precision mathematical constants:
 ### GUI Usage
 1. Launch the calculator: `mvn exec:java "-Dexec.mainClass=com.calculator.CalculatorGUI"`
 2. Click numbers and operations
-3. Press **=** to calculate
-4. Use **Help** button for detailed instructions
-5. View **History** to see previous calculations
-6. Use memory functions (MS, MR, MC, M+, M-) to store values
+3. **See operation display**: When you click +, you'll see "78 +" above the main display
+4. Press **=** to calculate
+5. Use **Help** button for detailed instructions
+6. View **History** to see previous calculations
+7. Use memory functions (MS, MR, MC, M+, M-) to store values
+
+### Visual Feedback Examples
+```
+Type: 78 + 22
+Display shows:
+┌─────────────────┐
+│      78 +       │ ← Operation indicator
+├─────────────────┤
+│              22 │ ← Current input
+└─────────────────┘
+
+Press =:
+┌─────────────────┐
+│                 │ ← Operation cleared
+├─────────────────┤
+│             100 │ ← Result
+└─────────────────┘
+```
 
 ### CLI Usage
 ```
@@ -156,6 +204,10 @@ Tests include:
   java -cp target/classes com.calculator.CalculatorGUI
   ```
 
+**Symbols display as squares?**
+- This is normal - the calculator uses standard mathematical symbols
+- All functionality works regardless of symbol display
+
 **CLI Issues?**
 - Use: `mvn exec:java "-Dexec.mainClass=com.calculator.CalculatorCLI"`
 - Or: `java -cp target/classes com.calculator.CalculatorCLI`
@@ -176,7 +228,7 @@ Calculator-1/
 ├── src/
 │   ├── main/java/com/calculator/
 │   │   ├── Calculator.java          # Core calculation logic
-│   │   ├── CalculatorGUI.java       # Graphical interface
+│   │   ├── CalculatorGUI.java       # Graphical interface with live display
 │   │   ├── CalculatorCLI.java       # Command-line interface
 │   │   ├── CalculatorException.java # Base exception class
 │   │   ├── DivisionByZeroException.java
@@ -194,6 +246,7 @@ Calculator-1/
 | Feature | GUI | CLI |
 |---------|-----|-----|
 | Basic Operations | ✅ | ✅ |
+| Live Operation Display | ✅ | ❌ |
 | Advanced Functions | ✅ | ❌ |
 | Memory Operations | ✅ | ❌ |
 | History Tracking | ✅ | ❌ |
@@ -201,9 +254,57 @@ Calculator-1/
 | Visual Interface | ✅ | ❌ |
 | Keyboard Input | ✅ | ✅ |
 | Error Handling | ✅ | ✅ |
+| Real-time Feedback | ✅ | ❌ |
+
+## Keyboard Shortcuts ⌨️
+
+The GUI calculator supports comprehensive keyboard shortcuts for lightning-fast calculations:
+
+### Number Input
+- **0-9 keys**: Type numbers directly
+- **. (period)**: Add decimal point
+- **Backspace**: Delete last entered digit
+
+### Operations
+- **+ key**: Addition
+- **- key**: Subtraction  
+- **\* key**: Multiplication
+- **/ key**: Division
+- **Enter**: Calculate result
+- **Escape or C**: Clear calculation
+
+### Memory Functions
+- **Ctrl+M**: Memory Store (MS)
+- **Ctrl+R**: Memory Recall (MR)
+- **Ctrl+Shift+C**: Memory Clear (MC)
+
+### Mathematical Constants
+- **Ctrl+P**: Insert π (Pi = 3.14159...)
+- **Ctrl+E**: Insert e (Euler's number = 2.71828...)
+
+### Advanced Functions
+- **Ctrl+S**: Square root (√)
+- **F1**: Open Help with full shortcuts reference
+
+### Features
+✅ **Mix keyboard and mouse** - Use whatever feels faster  
+✅ **Visual feedback** - Status bar confirms your key presses  
+✅ **Live operation display** - See "78 +" while typing  
+✅ **Instant response** - No delay between key press and action  
+✅ **Error handling** - Invalid keys are safely ignored  
+✅ **Tooltips** - Hover over buttons to see keyboard shortcuts  
+
+### Quick Start Examples
+```
+Type: 15 * 3 [Enter]     → Shows "15 ×" then Result: 45
+Type: 25 [Ctrl+S]        → Result: 5 (square root)
+Type: 100 [Ctrl+M]       → Stores 100 in memory, shows "Memory: 100"
+Type: [Ctrl+P] * 2       → Shows "3.14159 ×" then calculates π × 2
+Type: [Esc]              → Clears everything
+```
 
 ---
 
 **Happy calculating!** 🎉
 
-*Choose GUI for full features or CLI for simple calculations.*
+*Choose GUI for full features with live operation display or CLI for simple calculations.*
