@@ -193,14 +193,12 @@ public class Calculator {
         return multiply(number, E);
     }
     
-    public double circleArea(double radius) throws CalculatorException {
-        validateInput(radius, "Radius");
-        return multiply(PI, power(radius, 2));
+    public double circleArea(double radius) throws InvalidInputException {
+        return multiply(Math.PI, power(radius, 2));
     }
     
-    public double circumference(double radius) throws CalculatorException {
-        validateInput(radius, "Radius");
-        return multiply(2, multiply(PI, radius));
+    public double circumference(double radius) throws InvalidInputException {
+        return multiply(2, multiply(Math.PI, radius));
     }
     
     // History operations
@@ -263,6 +261,7 @@ public class Calculator {
                            memory, history.size());
     }
 }
+
 
 
 

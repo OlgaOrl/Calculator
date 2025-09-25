@@ -88,7 +88,7 @@ public class CalculatorGUI extends JFrame implements ActionListener {
             "MC", "MR", "MS", "M+", "M-",
             "C", "CE", "√", "x²", "1/x",
             "∛", "xʸ", "ⁿ√", "%", "±",
-            "7", "8", "9", "÷", "History",
+            "7", "8", "9", "÷", "Help",
             "4", "5", "6", "×", "Clear H",
             "1", "2", "3", "-", "",
             "0", ".", "=", "+", ""
@@ -187,6 +187,8 @@ public class CalculatorGUI extends JFrame implements ActionListener {
                 showHistory();
             } else if (command.equals("Clear H")) {
                 clearHistory();
+            } else if (command.equals("Help")) {
+                showHelp();
             }
             
             updateMemoryDisplay();
@@ -420,12 +422,63 @@ public class CalculatorGUI extends JFrame implements ActionListener {
         return panel;
     }
     
+    private void showHelp() {
+        String helpText = """
+            🧮 CALCULATOR HELP
+            
+            📱 BASIC OPERATIONS:
+            • Numbers: Click 0-9 or use keyboard
+            • Operations: +, -, ×, ÷
+            • Decimal: . for decimal numbers
+            • Clear: C to start over
+            
+            🔢 ADVANCED OPERATIONS:
+            • √ - Square root
+            • ∛ - Cube root  
+            • x² - Square a number
+            • xʸ - Power operation
+            • ⁿ√ - Nth root
+            • 1/x - Reciprocal
+            • % - Percentage
+            • ± - Change sign
+            
+            💾 MEMORY FUNCTIONS:
+            • MS - Memory Store
+            • MR - Memory Recall
+            • MC - Memory Clear
+            • M+ - Add to memory
+            • M- - Subtract from memory
+            
+            📊 HISTORY:
+            • History - View calculations
+            • Clear H - Clear history
+            
+            💡 TIPS:
+            • Use keyboard for faster input
+            • Memory value shown at top
+            • History tracks all calculations
+            """;
+        
+        JTextArea textArea = new JTextArea(helpText);
+        textArea.setEditable(false);
+        textArea.setFont(new Font("Arial", Font.PLAIN, 12));
+        textArea.setBackground(new Color(50, 50, 50));
+        textArea.setForeground(Color.WHITE);
+        
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setPreferredSize(new Dimension(450, 400));
+        
+        JOptionPane.showMessageDialog(this, scrollPane, "Calculator Help", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             new CalculatorGUI().setVisible(true);
         });
     }
 }
+
+
 
 
 

@@ -8,14 +8,27 @@ A simple and powerful calculator application with beautiful graphical interface 
 - Java 22 or higher installed on your computer
 
 ### How to Run
-1. Download this project to your computer
-2. Open terminal/command prompt in the project folder
-3. Type: `mvn clean compile exec:java`
-4. Press Enter and enjoy! 🎉
+
+#### GUI Version (Recommended)
+```bash
+mvn clean compile
+mvn exec:java "-Dexec.mainClass=com.calculator.CalculatorGUI"
+```
+
+#### CLI Version
+```bash
+mvn clean compile
+mvn exec:java "-Dexec.mainClass=com.calculator.CalculatorCLI"
+```
+
+#### Default Version
+```bash
+mvn clean compile exec:java
+```
 
 ## How to Use 💡
 
-### Calculator Window
+### Calculator Window (GUI)
 - **Numbers**: Click 0-9 buttons or use your keyboard
 - **Operations**: Click +, -, ×, ÷ for calculations
 - **Clear**: Press C to start over
@@ -23,29 +36,47 @@ A simple and powerful calculator application with beautiful graphical interface 
 - **Percent**: Press % for percentage calculations
 - **Decimal**: Press . for decimal numbers
 - **Advanced**: √ (square root), ∛ (cube root), x² (square), xʸ (power), ⁿ√ (nth root), 1/x (reciprocal)
+- **Help**: Click Help button for detailed instructions
+- **History**: View and clear calculation history
 
 ### Command Line Version
-If you prefer typing, run:
-```bash
-mvn clean compile exec:java -Dexec.mainClass="com.calculator.CalculatorCLI"
+Simple menu-driven interface for basic calculations:
 ```
-
-**New in CLI v2.0:**
-- 🎯 **Smart Error Messages**: Clear explanations when you enter invalid data
-- 🔄 **Recovery Options**: Automatic retry for division by zero
-- 💡 **Helpful Examples**: Shows you exactly what to type
-- 😊 **Friendly Interface**: Emojis and encouraging messages
-- ⚡ **Better Input Validation**: Handles empty inputs and typos gracefully
+=== CALCULATOR MENU ===
+1. Basic Calculation
+2. Exit
+Choose option:
+```
 
 ## Features ✨
 
+- **Dual Interface**: Both beautiful GUI and simple CLI
 - **Basic Math**: Add, subtract, multiply, divide
 - **Advanced Functions**: Powers, square roots, cube roots, nth roots, reciprocals
 - **Memory Functions**: Store, recall, clear, add to/subtract from memory
 - **History**: See your previous calculations (GUI only)
 - **Error Protection**: Won't crash on invalid input
-- **Smart CLI**: Improved command-line experience with helpful guidance
-- **Dual Interface**: Both GUI and CLI available
+- **Help System**: Built-in help with detailed instructions
+- **Visual Design**: Modern dark theme with color-coded buttons
+
+### GUI Button Layout
+```
+┌─────┬─────┬─────┬─────┬─────┐
+│ MC  │ MR  │ MS  │ M+  │ M-  │ Memory Functions
+├─────┼─────┼─────┼─────┼─────┤
+│  C  │ CE  │  √  │ x²  │ 1/x │ Clear & Advanced
+├─────┼─────┼─────┼─────┼─────┤
+│  ∛  │ xʸ  │ ⁿ√  │  %  │  ±  │ Advanced Functions
+├─────┼─────┼─────┼─────┼─────┤
+│  7  │  8  │  9  │  ÷  │Help │ Numbers & Operations
+├─────┼─────┼─────┼─────┼─────┤
+│  4  │  5  │  6  │  ×  │Cl H │ Numbers & Operations
+├─────┼─────┼─────┼─────┼─────┤
+│  1  │  2  │  3  │  -  │     │ Numbers & Operations
+├─────┼─────┼─────┼─────┼─────┤
+│  0  │  .  │  =  │  +  │     │ Numbers & Operations
+└─────┴─────┴─────┴─────┴─────┘
+```
 
 ### Memory Operations
 - **MS (Memory Store)**: Save a number to memory
@@ -69,134 +100,110 @@ The calculator includes high-precision mathematical constants:
 |----------|--------|--------|-------|
 | Pi | π | 3.141592653589793 | Circle calculations (area, circumference) |
 | Euler's Number | e | 2.718281828459045 | Exponential and logarithmic functions |
-| Golden Ratio | φ | 1.618033988749895 | Nature proportions and art |
-
-#### Using Constants in CLI
-```
-=== MATHEMATICAL CONSTANTS ===
-π (Pi) = 3.1415926536
-  → Used for circles (area, circumference)
-e (Euler's number) = 2.7182818285
-  → Used for exponential and logarithmic functions
-
-Choose option: 1
-Using π = 3.141593
-Choose operation (+, -, *, /): *
-Enter second number: 2
-✨ Result: 3.141593 * 2 = 6.283185
-(π * 2 = 6.283185)
-Save result to memory? (y/n): y
-✅ Result saved to memory
-```
-
-#### Using Constants in GUI
-- Click **π** button to insert Pi value (tooltip: "Pi (3.14159...) - for circles")
-- Click **e** button to insert Euler's number (tooltip: "Euler's number (2.71828...) - for exponential")
-- Click **φ** for Golden Ratio (tooltip: "Golden Ratio (1.61803...) - nature proportions")
-- Click **2π** for 2×Pi (tooltip: "2×Pi (6.28318...) - full circle circumference")
-- Constants display with symbol and precise value
-- Info panel shows what each constant represents
-
-#### Circle Calculations
-```java
-// Circumference = 2πr
-double circumference = calculator.circumference(radius);
-
-// Area = πr²  
-double area = calculator.circleArea(radius);
-```
-
-#### Memory Integration
-Constants work seamlessly with memory functions:
-- Store constants in memory: MS with π or e
-- Add constants to memory: M+ π  
-- Use stored constants in calculations
-- Memory displays constant values with full precision
 
 ## Usage Examples 📝
 
-### Memory Operations Example
+### GUI Usage
+1. Launch the calculator: `mvn exec:java "-Dexec.mainClass=com.calculator.CalculatorGUI"`
+2. Click numbers and operations
+3. Press **=** to calculate
+4. Use **Help** button for detailed instructions
+5. View **History** to see previous calculations
+6. Use memory functions (MS, MR, MC, M+, M-) to store values
+
+### CLI Usage
 ```
+Welcome to Calculator CLI!
+
 === CALCULATOR MENU ===
 1. Basic Calculation
-2. Advanced Operations
-3. Memory Operations  
-4. View Memory
-5. Start GUI
-6. Exit
-📝 Memory: 42.5
+2. Exit
+Choose option: 1
 
-Choose option: 3
-
-=== MEMORY OPERATIONS ===
-MS - Memory Store (save a number)
-MR - Memory Recall (use saved number)
-MC - Memory Clear (clear memory)
-M+ - Memory Add (add to memory)
-M- - Memory Subtract (subtract from memory)
-📝 Current Memory: 42.5
-
-Choose memory operation: M+
-Current memory: 42.5
-Enter number to add to memory: 7.5
-✅ Added 7.5 to memory
-📝 New memory value: 50
+Enter first number: 15
+Enter operation (+, -, *, /): *
+Enter second number: 3
+Result: 45.0
 ```
 
-### Using Memory in Calculations
-```
-=== BASIC CALCULATION ===
-Use memory value 50? (y/n): y
-Using 50 as first number
-Choose operation (+, -, *, /): *
-Enter second number: 2
-✨ Result: 50 * 2 = 100
-Save result to memory? (y/n): y
-✅ Result saved to memory
+## Testing 🧪
+
+Run comprehensive tests:
+```bash
+mvn test
 ```
 
-### Advanced Operations Example
-```
-=== ADVANCED OPERATIONS ===
-1. Square Root (√)
-2. Power (x^y)
-3. Square (x²)
-4. Cube Root (∛)
-5. Nth Root
-
-Choose operation: 1
-Enter number for square root: 16
-✨ Result: √16 = 4
-Save result to memory? (y/n): n
-```
+Tests include:
+- ✅ Basic arithmetic operations
+- ✅ Advanced mathematical functions
+- ✅ Memory operations
+- ✅ Error handling
+- ✅ Input validation
+- ✅ History tracking
 
 ## Troubleshooting 🔧
 
 **Calculator won't start?**
-- Make sure Java 22+ is installed
-- Check that you're in the correct folder
-- Try running `java -version` to verify Java installation
+- Make sure Java 22+ is installed: `java -version`
+- Check that you're in the correct project folder
+- Try: `mvn clean compile` first
+
+**GUI won't open?**
+- Use quotes around the parameter: `mvn exec:java "-Dexec.mainClass=com.calculator.CalculatorGUI"`
+- Or run in two steps:
+  ```bash
+  mvn clean compile
+  java -cp target/classes com.calculator.CalculatorGUI
+  ```
+
+**CLI Issues?**
+- Use: `mvn exec:java "-Dexec.mainClass=com.calculator.CalculatorCLI"`
+- Or: `java -cp target/classes com.calculator.CalculatorCLI`
 
 **Compilation errors?**
 - Run `mvn clean compile` first
 - Check for any missing dependencies
 - Ensure all source files are present
 
-**CLI Issues?**
-- Use: `mvn clean compile` then `java -cp target/classes com.calculator.CalculatorCLI`
-- Or try: `mvn exec:java -Dexec.mainClass=com.calculator.CalculatorCLI` (without quotes)
+**PowerShell command issues?**
+- Always use quotes around `-Dexec.mainClass` parameter
+- Or use two separate commands: compile first, then run
 
-**GUI Issues?**
-- Default command starts GUI: `mvn clean compile exec:java`
-- From CLI, choose option 5 to launch GUI
-- Both interfaces can run simultaneously
+## Project Structure 📁
 
-**Need help with calculations?**
-- CLI shows helpful examples for invalid inputs
-- All error messages include suggestions
-- Use C button in GUI to clear and start fresh
-- History feature in GUI tracks your calculations
+```
+Calculator-1/
+├── src/
+│   ├── main/java/com/calculator/
+│   │   ├── Calculator.java          # Core calculation logic
+│   │   ├── CalculatorGUI.java       # Graphical interface
+│   │   ├── CalculatorCLI.java       # Command-line interface
+│   │   ├── CalculatorException.java # Base exception class
+│   │   ├── DivisionByZeroException.java
+│   │   ├── InvalidInputException.java
+│   │   └── help/
+│   │       └── HelpTopic.java       # Help system support
+│   └── test/java/com/calculator/
+│       └── CalculatorTest.java      # Comprehensive tests
+├── pom.xml                          # Maven configuration
+└── README.md                        # This file
+```
+
+## Features Comparison 📊
+
+| Feature | GUI | CLI |
+|---------|-----|-----|
+| Basic Operations | ✅ | ✅ |
+| Advanced Functions | ✅ | ❌ |
+| Memory Operations | ✅ | ❌ |
+| History Tracking | ✅ | ❌ |
+| Help System | ✅ | ❌ |
+| Visual Interface | ✅ | ❌ |
+| Keyboard Input | ✅ | ✅ |
+| Error Handling | ✅ | ✅ |
 
 ---
 
 **Happy calculating!** 🎉
+
+*Choose GUI for full features or CLI for simple calculations.*
