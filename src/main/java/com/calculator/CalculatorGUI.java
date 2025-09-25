@@ -135,6 +135,17 @@ public class CalculatorGUI extends JFrame implements ActionListener {
             button.setForeground(Color.BLACK);
         }
         
+        // Add tooltips for constant buttons
+        if (text.equals("π")) {
+            button.setToolTipText("Pi (3.14159...) - for circles");
+        } else if (text.equals("e")) {
+            button.setToolTipText("Euler's number (2.71828...) - for exponential");
+        } else if (text.equals("φ")) {
+            button.setToolTipText("Golden Ratio (1.61803...) - nature proportions");
+        } else if (text.equals("2π")) {
+            button.setToolTipText("2×Pi (6.28318...) - full circle circumference");
+        }
+        
         button.setFocusPainted(false);
         return button;
     }
@@ -385,14 +396,36 @@ public class CalculatorGUI extends JFrame implements ActionListener {
         }
     }
     
+    private JPanel createConstantsInfoPanel() {
+        JPanel panel = new JPanel(new GridLayout(3, 1, 5, 5));
+        panel.setBorder(BorderFactory.createTitledBorder("Mathematical Constants"));
+        panel.setBackground(new Color(60, 60, 60));
+        
+        JLabel piLabel = new JLabel("π (Pi) ≈ 3.14159 - Circle calculations");
+        piLabel.setForeground(Color.WHITE);
+        piLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+        
+        JLabel eLabel = new JLabel("e (Euler) ≈ 2.71828 - Exponential functions");
+        eLabel.setForeground(Color.WHITE);
+        eLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+        
+        JLabel goldenLabel = new JLabel("φ (Golden) ≈ 1.61803 - Golden ratio");
+        goldenLabel.setForeground(Color.WHITE);
+        goldenLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+        
+        panel.add(piLabel);
+        panel.add(eLabel);
+        panel.add(goldenLabel);
+        
+        return panel;
+    }
+    
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             new CalculatorGUI().setVisible(true);
         });
     }
 }
-
-
 
 
 

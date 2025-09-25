@@ -62,6 +62,57 @@ mvn clean compile exec:java -Dexec.mainClass="com.calculator.CalculatorCLI"
 - **ⁿ√**: Calculate nth root
 - **1/x**: Reciprocal (1 divided by number)
 
+### Mathematical Constants
+The calculator includes high-precision mathematical constants:
+
+| Constant | Symbol | Value | Usage |
+|----------|--------|--------|-------|
+| Pi | π | 3.141592653589793 | Circle calculations (area, circumference) |
+| Euler's Number | e | 2.718281828459045 | Exponential and logarithmic functions |
+| Golden Ratio | φ | 1.618033988749895 | Nature proportions and art |
+
+#### Using Constants in CLI
+```
+=== MATHEMATICAL CONSTANTS ===
+π (Pi) = 3.1415926536
+  → Used for circles (area, circumference)
+e (Euler's number) = 2.7182818285
+  → Used for exponential and logarithmic functions
+
+Choose option: 1
+Using π = 3.141593
+Choose operation (+, -, *, /): *
+Enter second number: 2
+✨ Result: 3.141593 * 2 = 6.283185
+(π * 2 = 6.283185)
+Save result to memory? (y/n): y
+✅ Result saved to memory
+```
+
+#### Using Constants in GUI
+- Click **π** button to insert Pi value (tooltip: "Pi (3.14159...) - for circles")
+- Click **e** button to insert Euler's number (tooltip: "Euler's number (2.71828...) - for exponential")
+- Click **φ** for Golden Ratio (tooltip: "Golden Ratio (1.61803...) - nature proportions")
+- Click **2π** for 2×Pi (tooltip: "2×Pi (6.28318...) - full circle circumference")
+- Constants display with symbol and precise value
+- Info panel shows what each constant represents
+
+#### Circle Calculations
+```java
+// Circumference = 2πr
+double circumference = calculator.circumference(radius);
+
+// Area = πr²  
+double area = calculator.circleArea(radius);
+```
+
+#### Memory Integration
+Constants work seamlessly with memory functions:
+- Store constants in memory: MS with π or e
+- Add constants to memory: M+ π  
+- Use stored constants in calculations
+- Memory displays constant values with full precision
+
 ## Usage Examples 📝
 
 ### Memory Operations Example

@@ -320,6 +320,46 @@ class CalculatorTest {
         assertEquals(Math.E, Calculator.E, DELTA);
     }
     
+    @Test
+    @DisplayName("Calculator handles very precise constant values")
+    void calculatorHandlesVeryPreciseValues() throws CalculatorException {
+        // Test with extreme precision requirements
+        double piSquared = calculator.power(calculator.getPi(), 2);
+        assertEquals(9.869604401089358, piSquared, 1e-15);
+        
+        double eSquared = calculator.power(calculator.getE(), 2);  
+        assertEquals(7.3890560989306495, eSquared, 1e-15);
+        
+        // Test very small calculations
+        double piDividedByLarge = calculator.divide(calculator.getPi(), 1e10);
+        assertEquals(3.141592653589793e-10, piDividedByLarge, 1e-25);
+    }
+    
+    @Test
+    @DisplayName("User can use Pi in all arithmetic operations")
+    void userCanUsePiInAllOperations() throws CalculatorException {
+        // Multiply: 2 × π
+        assertEquals(2 * Math.PI, calculator.multiply(2, calculator.getPi()), DELTA);
+        
+        // Divide: 10 ÷ π  
+        assertEquals(10 / Math.PI, calculator.divide(10, calculator.getPi()), DELTA);
+        
+        // Add: 5 + π
+        assertEquals(5 + Math.PI, calculator.add(5, calculator.getPi()), DELTA);
+        
+        // Subtract: 10 - π
+        assertEquals(10 - Math.PI, calculator.subtract(10, calculator.getPi()), DELTA);
+    }
+    
+    @Test
+    @DisplayName("User can use Euler's number in calculations")
+    void userCanUseEulersNumber() throws CalculatorException {
+        assertEquals(3 * Math.E, calculator.multiply(3, calculator.getE()), DELTA);
+        assertEquals(Math.E / 2, calculator.divide(calculator.getE(), 2), DELTA);
+        assertEquals(1 + Math.E, calculator.add(1, calculator.getE()), DELTA);
+        assertEquals(5 - Math.E, calculator.subtract(5, calculator.getE()), DELTA);
+    }
+    
     @Nested
     @DisplayName("User-Focused Multiplication Tests")
     class UserMultiplicationTests {
@@ -367,6 +407,7 @@ class CalculatorTest {
         }
     }
 }
+
 
 
 

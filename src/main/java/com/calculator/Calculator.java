@@ -8,67 +8,16 @@ import java.util.List;
 /**
  * A comprehensive calculator class providing mathematical operations,
  * memory functionality, and calculation history tracking.
- * 
- * Features include:
- * - Basic arithmetic operations (add, subtract, multiply, divide)
- * - Advanced mathematical operations (power, square root, factorial)
- * - Memory operations (store, recall, clear, add)
- * - Calculation history tracking
- * - Input validation and custom exception handling
- * 
- * @author Developer
- * @version 2.0
- * @since 1.0
  */
 public class Calculator {
+    private double memory = 0.0;
+    private List<String> history = new ArrayList<>();
     
-    /** Mathematical constant PI */
+    // Mathematical constants
     public static final double PI = Math.PI;
-    
-    /** Mathematical constant E (Euler's number) */
     public static final double E = Math.E;
     
-    private double memory;
-    private final List<String> history;
-    
-    /**
-     * Constructs a new Calculator instance.
-     * Initializes memory to 0 and creates empty calculation history.
-     */
-    public Calculator() {
-        this.memory = 0.0;
-        this.history = new ArrayList<>();
-    }
-    
-    // Basic Arithmetic Operations
-    
-    /**
-     * Adds two double numbers and returns their sum.
-     * 
-     * <p>This method performs basic addition of two double values, handling
-     * special cases such as infinity and NaN according to IEEE 754 standard.</p>
-     * 
-     * <p><strong>Usage Examples:</strong></p>
-     * <pre>{@code
-     * Calculator calc = new Calculator();
-     * double result1 = calc.add(5.0, 3.0);        // returns 8.0
-     * double result2 = calc.add(-2.5, 7.5);       // returns 5.0
-     * double result3 = calc.add(0.1, 0.2);        // returns 0.3
-     * }</pre>
-     * 
-     * <p><strong>Edge Cases:</strong></p>
-     * <ul>
-     * <li>Adding with {@code Double.POSITIVE_INFINITY} returns {@code Double.POSITIVE_INFINITY}</li>
-     * <li>Adding with {@code Double.NaN} returns {@code Double.NaN}</li>
-     * <li>Overflow results in {@code Double.POSITIVE_INFINITY} or {@code Double.NEGATIVE_INFINITY}</li>
-     * </ul>
-     * 
-     * @param a the first number to add
-     * @param b the second number to add
-     * @return the sum of a and b, following IEEE 754 arithmetic rules
-     * @throws InvalidInputException if either parameter is NaN
-     * @since 1.1
-     */
+    // Basic arithmetic operations
     public double add(double a, double b) throws InvalidInputException {
         validateInput(a, "First parameter");
         validateInput(b, "Second parameter");
@@ -78,14 +27,6 @@ public class Calculator {
         return result;
     }
     
-    /**
-     * Subtracts the second number from the first.
-     * 
-     * @param a the minuend
-     * @param b the subtrahend
-     * @return the difference of a minus b
-     * @throws InvalidInputException if either parameter is NaN
-     */
     public double subtract(double a, double b) throws InvalidInputException {
         validateInput(a, "Minuend");
         validateInput(b, "Subtrahend");
@@ -95,48 +36,6 @@ public class Calculator {
         return result;
     }
     
-    /**
-     * Multiplies two numbers and returns their product.
-     * 
-     * <p>This method allows users to multiply any two numbers, including positive numbers,
-     * negative numbers, decimals, and special values like zero and one. The multiplication
-     * follows standard mathematical rules and provides clear, accurate results.</p>
-     * 
-     * <p><strong>User Examples:</strong></p>
-     * <pre>{@code
-     * Calculator calc = new Calculator();
-     * 
-     * // Multiply positive numbers
-     * double result1 = calc.multiply(5.0, 3.0);        // returns 15.0
-     * 
-     * // Multiply with negative numbers  
-     * double result2 = calc.multiply(-4.0, 2.0);       // returns -8.0
-     * double result3 = calc.multiply(-3.0, -2.0);      // returns 6.0
-     * 
-     * // Multiply decimals
-     * double result4 = calc.multiply(2.5, 4.0);        // returns 10.0
-     * 
-     * // Multiply by zero (always gives zero)
-     * double result5 = calc.multiply(0.0, 5.0);        // returns 0.0
-     * 
-     * // Multiply by one (gives same number) 
-     * double result6 = calc.multiply(7.0, 1.0);        // returns 7.0
-     * }</pre>
-     * 
-     * <p><strong>Mathematical Properties:</strong></p>
-     * <ul>
-     * <li>Commutative: a × b = b × a</li>
-     * <li>Identity: a × 1 = a</li>
-     * <li>Zero property: a × 0 = 0</li>
-     * <li>Sign rules: (-) × (-) = (+), (-) × (+) = (-), (+) × (+) = (+)</li>
-     * </ul>
-     * 
-     * @param a the first number to multiply
-     * @param b the second number to multiply  
-     * @return the product of a and b
-     * @throws InvalidInputException if either parameter is NaN
-     * @since 1.3
-     */
     public double multiply(double a, double b) throws InvalidInputException {
         validateInput(a, "Multiplicand");
         validateInput(b, "Multiplier");
@@ -146,15 +45,6 @@ public class Calculator {
         return result;
     }
     
-    /**
-     * Divides the first number by the second.
-     * 
-     * @param a the dividend
-     * @param b the divisor
-     * @return the quotient of a divided by b
-     * @throws DivisionByZeroException if b is zero
-     * @throws InvalidInputException if either parameter is NaN
-     */
     public double divide(double a, double b) throws DivisionByZeroException, InvalidInputException {
         validateInput(a, "Dividend");
         validateInput(b, "Divisor");
@@ -168,33 +58,7 @@ public class Calculator {
         return result;
     }
     
-    // Advanced Mathematical Operations
-    
-    /**
-     * Calculates a percentage of a number.
-     * 
-     * @param number the base number
-     * @param percent the percentage to calculate
-     * @return the percentage value
-     * @throws InvalidInputException if either parameter is NaN
-     */
-    public double percentage(double number, double percent) throws InvalidInputException {
-        validateInput(number, "Number");
-        validateInput(percent, "Percentage");
-        
-        double result = (number * percent) / 100.0;
-        logCalculation(percent + "% of " + number + " = " + formatResult(result));
-        return result;
-    }
-    
-    /**
-     * Calculates power of a number.
-     * 
-     * @param base the base number
-     * @param exponent the exponent
-     * @return base raised to the power of exponent
-     * @throws InvalidInputException if inputs are invalid
-     */
+    // Advanced operations
     public double power(double base, double exponent) throws InvalidInputException {
         validateInput(base, "Base");
         validateInput(exponent, "Exponent");
@@ -204,14 +68,8 @@ public class Calculator {
         return result;
     }
     
-    /**
-     * Calculates square root of a number.
-     * @param number the number to find square root of
-     * @return square root of the number
-     * @throws InvalidInputException if number is negative
-     */
     public double squareRoot(double number) throws InvalidInputException {
-        validateInput(number, "Square root input");
+        validateInput(number, "Number");
         if (number < 0) {
             throw new InvalidInputException("Cannot calculate square root of negative number: " + number);
         }
@@ -221,45 +79,36 @@ public class Calculator {
         return result;
     }
     
-    /**
-     * Calculates cube root of a number.
-     * @param number the number
-     * @return cube root of the number
-     */
     public double cubeRoot(double number) throws InvalidInputException {
-        validateInput(number, "Cube root input");
+        validateInput(number, "Number");
         
         double result = Math.cbrt(number);
         logCalculation("∛" + number + " = " + formatResult(result));
         return result;
     }
     
-    /**
-     * Calculates nth root of a number.
-     * @param number the number
-     * @param n the root degree
-     * @return nth root of the number
-     */
     public double nthRoot(double number, double n) throws InvalidInputException {
         validateInput(number, "Number");
-        validateInput(n, "Root degree");
+        validateInput(n, "Root");
         
         if (n == 0) {
-            throw new InvalidInputException("Root degree cannot be zero");
+            throw new InvalidInputException("Root cannot be zero");
         }
         
         double result = Math.pow(number, 1.0 / n);
-        logCalculation(n + "√" + number + " = " + formatResult(result));
+        logCalculation("" + n + "√" + number + " = " + formatResult(result));
         return result;
     }
     
-    /**
-     * Calculates the absolute value of a number.
-     * 
-     * @param number the number to get absolute value for
-     * @return the absolute value of the number
-     * @throws InvalidInputException if number is NaN
-     */
+    public double percentage(double number, double percent) throws InvalidInputException {
+        validateInput(number, "Number");
+        validateInput(percent, "Percentage");
+        
+        double result = (number * percent) / 100.0;
+        logCalculation(percent + "% of " + number + " = " + formatResult(result));
+        return result;
+    }
+    
     public double absolute(double number) throws InvalidInputException {
         validateInput(number, "Number");
         
@@ -268,13 +117,6 @@ public class Calculator {
         return result;
     }
     
-    /**
-     * Calculates factorial of a non-negative integer.
-     * 
-     * @param number the number to calculate factorial for
-     * @return the factorial of the number
-     * @throws InvalidInputException if number is negative or not an integer
-     */
     public long factorial(int number) throws InvalidInputException {
         if (number < 0) {
             throw new InvalidInputException("Factorial is not defined for negative numbers: " + number);
@@ -293,125 +135,88 @@ public class Calculator {
         return result;
     }
     
-    // Memory Operations
+    public double reciprocal(double number) throws InvalidInputException, DivisionByZeroException {
+        validateInput(number, "Number");
+        return divide(1.0, number);
+    }
     
-    /**
-     * Stores a value in memory.
-     * 
-     * @param value the value to store
-     * @throws InvalidInputException if value is NaN
-     */
+    // Memory operations
     public void memoryStore(double value) throws InvalidInputException {
         validateInput(value, "Memory value");
         this.memory = value;
-        logCalculation("Memory stored: " + formatResult(value));
+        logCalculation("Memory store: " + formatResult(value));
     }
     
-    /**
-     * Recalls the value from memory.
-     * 
-     * @return the value stored in memory
-     */
     public double memoryRecall() {
         return memory;
     }
     
-    /**
-     * Adds a value to memory.
-     * 
-     * @param value the value to add to memory
-     * @throws InvalidInputException if value is NaN
-     */
     public void memoryAdd(double value) throws InvalidInputException {
         validateInput(value, "Memory value");
         this.memory += value;
         logCalculation("Memory add: " + formatResult(value) + ", Total: " + formatResult(memory));
     }
     
-    /**
-     * Clears the memory.
-     */
-    public void memoryClear() {
-        this.memory = 0.0;
-        logCalculation("Memory cleared");
-    }
-    
-    /**
-     * Subtracts value from memory (Memory Subtract - M-).
-     * 
-     * @param value the value to subtract from memory
-     * @throws InvalidInputException if value is NaN
-     */
     public void memorySubtract(double value) throws InvalidInputException {
         validateInput(value, "Memory value");
         this.memory -= value;
         logCalculation("Memory subtract: " + formatResult(value) + ", Total: " + formatResult(memory));
     }
     
-    /**
-     * Gets current memory value without affecting it.
-     * 
-     * @return the current memory value
-     */
     public double getMemoryValue() {
-        return this.memory;
+        return memory;
     }
     
-    /**
-     * Checks if memory has non-zero value.
-     * 
-     * @return true if memory contains non-zero value
-     */
+    public void memoryClear() {
+        this.memory = 0.0;
+        logCalculation("Memory cleared");
+    }
+    
     public boolean hasMemoryValue() {
-        return this.memory != 0.0;
+        return memory != 0.0;
     }
     
-    // History Operations
+    // Constants
+    public double getPi() {
+        return PI;
+    }
     
-    /**
-     * Gets the calculation history.
-     * 
-     * @return list of calculation history
-     */
+    public double getE() {
+        return E;
+    }
+    
+    public double multiplyByPi(double number) throws InvalidInputException {
+        return multiply(number, PI);
+    }
+    
+    public double multiplyByE(double number) throws InvalidInputException {
+        return multiply(number, E);
+    }
+    
+    public double circleArea(double radius) throws CalculatorException {
+        validateInput(radius, "Radius");
+        return multiply(PI, power(radius, 2));
+    }
+    
+    public double circumference(double radius) throws CalculatorException {
+        validateInput(radius, "Radius");
+        return multiply(2, multiply(PI, radius));
+    }
+    
+    // History operations
     public List<String> getHistory() {
         return new ArrayList<>(history);
     }
     
-    /**
-     * Gets the last calculation.
-     * 
-     * @return the last calculation or null if no calculations
-     */
-    public String getLastCalculation() {
-        return history.isEmpty() ? null : history.get(history.size() - 1);
-    }
-    
-    /**
-     * Clears the calculation history.
-     */
     public void clearHistory() {
         history.clear();
     }
     
-    /**
-     * Logs a calculation to history.
-     * 
-     * @param calculation the calculation to log
-     */
-    private void logCalculation(String calculation) {
-        history.add(calculation);
+    public String getLastCalculation() {
+        return history.isEmpty() ? null : history.get(history.size() - 1);
     }
     
-    // Utility Methods
-    
-    /**
-     * Rounds a number to specified decimal places.
-     * 
-     * @param value the value to round
-     * @param places the number of decimal places
-     * @return the rounded value
-     * @throws InvalidInputException if value is NaN or places is negative
-     */
+    // Utility methods
     public double round(double value, int places) throws InvalidInputException {
         validateInput(value, "Value");
         if (places < 0) {
@@ -426,22 +231,10 @@ public class Calculator {
         return result;
     }
     
-    /**
-     * Checks if a double value represents an integer.
-     * 
-     * @param value the value to check
-     * @return true if value is an integer
-     */
     public boolean isInteger(double value) {
         return value == Math.floor(value) && !Double.isInfinite(value);
     }
     
-    /**
-     * Formats a result for display.
-     * 
-     * @param result the result to format
-     * @return formatted string representation
-     */
     public String formatResult(double result) {
         if (Double.isNaN(result)) {
             return "NaN";
@@ -454,12 +247,14 @@ public class Calculator {
         }
     }
     
-    // Private Helper Methods
-    
     private void validateInput(double value, String parameterName) throws InvalidInputException {
         if (Double.isNaN(value)) {
             throw new InvalidInputException(parameterName + " cannot be NaN");
         }
+    }
+    
+    private void logCalculation(String calculation) {
+        history.add(calculation);
     }
     
     @Override
@@ -468,8 +263,6 @@ public class Calculator {
                            memory, history.size());
     }
 }
-
-
 
 
 
