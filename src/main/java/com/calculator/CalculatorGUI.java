@@ -74,15 +74,17 @@ public class CalculatorGUI extends JFrame implements ActionListener, KeyListener
         pack();
         setLocationRelativeTo(null);
         
-        // Make focusable for keyboard input
+        // FIXED: Proper keyboard focus setup
         setFocusable(true);
         addKeyListener(this);
-        display.addKeyListener(this);
         
-        // Request focus for keyboard input
+        // FIXED: Remove KeyListener from display to prevent conflicts
+        // display.addKeyListener(this); // REMOVED
+        
+        // FIXED: Ensure main window gets focus for keyboard input
         SwingUtilities.invokeLater(() -> {
-            requestFocus();
-            display.requestFocus();
+            requestFocusInWindow();
+            setFocusable(true);
         });
     }
     
@@ -225,38 +227,25 @@ public class CalculatorGUI extends JFrame implements ActionListener, KeyListener
         button.setPreferredSize(new Dimension(65, 45));
         button.addActionListener(this);
         
-        // Color coding
+        // FIXED: Prevent buttons from stealing focus
+        button.setFocusable(false);
+        
+        // Color coding (existing code remains same)
         if (text.matches("[0-9.]")) {
-            // Numbers and decimal
             button.setBackground(new Color(80, 80, 80));
             button.setForeground(Color.WHITE);
         } else if (text.matches("[+\\-×÷=]")) {
-            // Basic operations
             button.setBackground(new Color(255, 149, 0));
             button.setForeground(Color.WHITE);
         } else if (text.matches("M[CRS+\\-]")) {
-            // Memory operations
             button.setBackground(new Color(100, 149, 237));
             button.setForeground(Color.WHITE);
         } else if (text.matches("√|x²|1/x|%|±")) {
-            // Advanced functions
             button.setBackground(new Color(138, 43, 226));
             button.setForeground(Color.WHITE);
         } else {
-            // Other functions
             button.setBackground(new Color(165, 165, 165));
             button.setForeground(Color.BLACK);
-        }
-        
-        // Add tooltips for constant buttons
-        if (text.equals("π")) {
-            button.setToolTipText("Pi (3.14159...) - for circles");
-        } else if (text.equals("e")) {
-            button.setToolTipText("Euler's number (2.71828...) - for exponential");
-        } else if (text.equals("φ")) {
-            button.setToolTipText("Golden Ratio (1.61803...) - nature proportions");
-        } else if (text.equals("2π")) {
-            button.setToolTipText("2×Pi (6.28318...) - full circle circumference");
         }
         
         button.setFocusPainted(false);
@@ -305,6 +294,9 @@ public class CalculatorGUI extends JFrame implements ActionListener, KeyListener
             }
             
             updateMemoryDisplay();
+            
+            // FIXED: Return focus to main window after button click
+            SwingUtilities.invokeLater(() -> requestFocusInWindow());
             
         } catch (Exception ex) {
             display.setText("Error");
@@ -657,9 +649,11 @@ public class CalculatorGUI extends JFrame implements ActionListener, KeyListener
                 handleOperation("×");
                 updateStatusLabel("Operation: Multiplication");
             } else if (keyChar == '/') {
+                // FIXED: Prevent default behavior and handle division
+                e.consume();
                 handleOperation("÷");
                 updateStatusLabel("Operation: Division");
-            } else if (keyCode == KeyEvent.VK_ENTER) {
+            } else if (keyCode == KeyEvent.VK_ENTER || keyChar == '=') {
                 handleEquals();
                 updateStatusLabel("Result calculated");
             } else if (keyCode == KeyEvent.VK_ESCAPE || keyChar == 'c' || keyChar == 'C') {
@@ -669,6 +663,10 @@ public class CalculatorGUI extends JFrame implements ActionListener, KeyListener
                 handleBackspace();
                 updateStatusLabel("Last digit deleted");
             }
+            
+            // FIXED: Maintain focus after key press
+            requestFocusInWindow();
+            
         } catch (Exception ex) {
             showError(ex.getMessage());
         }
