@@ -2,6 +2,67 @@
 
 A simple and powerful calculator application with beautiful graphical interface and command-line option.
 
+## 📚 Documentation
+
+### Project Documentation
+- 📋 [UML Class Diagram](docs/UML_Diagram.md) - System architecture and class relationships
+- 🏗️ [Design Patterns & Architecture](docs/DESIGN.md) - SOLID principles and design patterns
+- 🔢 [Algorithm Documentation](docs/ALGORITHM.md) - Pseudocode and complexity analysis
+- ☕ [Java Best Practices](docs/JAVA_BEST_PRACTICES.md) - OOP principles and code quality
+
+### Development Documentation
+- 🚀 [Development Workflow](DEVELOPMENT.md) - Git workflow and development practices
+
+## 🎯 Project Planning
+
+### Development Methodology
+This project follows **Agile Development** principles with emphasis on:
+
+- **Iterative Development**: Features developed in small, testable increments
+- **Test-Driven Development (TDD)**: Comprehensive unit tests for all functionality
+- **Clean Code Principles**: Following Robert Martin's clean code guidelines
+- **SOLID Principles**: Ensuring maintainable and extensible architecture
+
+### Project Phases
+
+#### Phase 1: Core Foundation ✅
+- [x] Basic arithmetic operations (add, subtract, multiply, divide)
+- [x] Exception handling framework
+- [x] Unit testing infrastructure
+- [x] Maven build configuration
+
+#### Phase 2: Advanced Features ✅
+- [x] Advanced mathematical functions (power, square root, factorial)
+- [x] Memory operations (store, recall, clear, add, subtract)
+- [x] Calculation history tracking
+- [x] Input validation and error handling
+
+#### Phase 3: User Interfaces ✅
+- [x] Command-line interface (CLI)
+- [x] Graphical user interface (GUI)
+- [x] Keyboard shortcuts and accessibility
+- [x] Visual feedback and status indicators
+
+#### Phase 4: Polish & Documentation ✅
+- [x] Comprehensive documentation
+- [x] Code quality improvements
+- [x] Performance optimizations
+- [x] Professional project structure
+
+### Architecture Decisions
+
+#### Design Pattern Selection
+- **MVC Pattern**: Separates business logic from presentation
+- **Strategy Pattern**: Encapsulates mathematical operations
+- **Observer Pattern**: Handles user interface events
+- **Exception Hierarchy**: Provides specific error handling
+
+#### Technology Stack
+- **Java 22**: Latest LTS features and performance improvements
+- **Swing**: Mature GUI framework with extensive customization
+- **JUnit 5**: Modern testing framework with parameterized tests
+- **Maven**: Dependency management and build automation
+
 ## Quick Start 🚀
 
 ### What You Need
@@ -225,6 +286,11 @@ Tests include:
 
 ```
 Calculator-1/
+├── docs/                            # 📚 Project Documentation
+│   ├── UML_Diagram.md              # Class diagrams and relationships
+│   ├── DESIGN.md                   # Architecture and design patterns
+│   ├── ALGORITHM.md                # Pseudocode and algorithms
+│   └── JAVA_BEST_PRACTICES.md      # OOP principles and code quality
 ├── src/
 │   ├── main/java/com/calculator/
 │   │   ├── Calculator.java          # Core calculation logic
@@ -238,7 +304,8 @@ Calculator-1/
 │   └── test/java/com/calculator/
 │       └── CalculatorTest.java      # Comprehensive tests
 ├── pom.xml                          # Maven configuration
-└── README.md                        # This file
+├── README.md                        # This file
+└── DEVELOPMENT.md                   # Development workflow and practices
 ```
 
 ## Features Comparison 📊
@@ -308,3 +375,14 @@ Type: [Esc]              → Clears everything
 **Happy calculating!** 🎉
 
 *Choose GUI for full features with live operation display or CLI for simple calculations.*
+
+## 🤝 Contributing
+
+This project demonstrates professional software development practices including:
+- Clean architecture with separation of concerns
+- Comprehensive unit testing with JUnit 5
+- Proper exception handling and input validation
+- Modern Java features and best practices
+- Professional documentation and code organization
+
+For development workflow and contribution guidelines, see [DEVELOPMENT.md](DEVELOPMENT.md).
