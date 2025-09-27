@@ -1,0 +1,405 @@
+# =============================================================================
+# Java Calculator Project - Comprehensive .gitignore
+# =============================================================================
+# This file specifies intentionally untracked files that Git should ignore.
+# Organized by category for maintainability and clarity.
+
+# =============================================================================
+# JAVA COMPILED FILES
+# =============================================================================
+# Compiled class files - generated during build process
+*.class
+
+# Log files - application and build logs
+*.log
+
+# BlueJ files - BlueJ IDE specific
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files - distribution archives
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Virtual machine crash logs
+# See http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+replay_pid*
+
+# =============================================================================
+# MAVEN BUILD SYSTEM
+# =============================================================================
+# Maven target directory - contains all build artifacts
+target/
+
+# Maven wrapper files (if not using system Maven)
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Maven specific files
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
+!/.mvn/wrapper/maven-wrapper.jar
+
+# =============================================================================
+# GRADLE BUILD SYSTEM (if used alongside Maven)
+# =============================================================================
+.gradle
+**/build/
+!src/**/build/
+
+# Gradle wrapper
+gradle-app.setting
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+
+# Cache of project
+.gradletasknamecache
+
+# =============================================================================
+# IDE SPECIFIC FILES
+# =============================================================================
+
+# --- Visual Studio Code ---
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+# --- IntelliJ IDEA ---
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# IntelliJ IDEA specific
+out/
+.idea_modules/
+atlassian-ide-plugin.xml
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+# --- Eclipse IDE ---
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# PyDev specific (Python in Eclipse)
+*.pydevproject
+
+# CDT-specific (C/C++ Development Tooling)
+.cproject
+
+# CDT- autotools
+.autotools
+
+# Java annotation processor (APT)
+.factorypath
+
+# PDT-specific (PHP Development Tools)
+.buildpath
+
+# sbteclipse plugin
+.target
+
+# Tern plugin
+.tern-project
+
+# TeXlipse plugin
+.texlipse
+
+# STS (Spring Tool Suite)
+.springBeans
+
+# Code Recommenders
+.recommenders/
+
+# Annotation Processing
+.apt_generated/
+.apt_generated_test/
+
+# Scala IDE specific (Scala plugin for Eclipse)
+.scala_dependencies
+.worksheet
+
+# --- NetBeans IDE ---
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# =============================================================================
+# OPERATING SYSTEM FILES
+# =============================================================================
+
+# --- Windows ---
+# Windows thumbnail cache files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+# Dump file
+*.stackdump
+
+# Folder config file
+[Dd]esktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# --- macOS ---
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# --- Linux ---
+*~
+
+# temporary files which can be created if a process still has a handle open of a deleted file
+.fuse_hidden*
+
+# KDE directory preferences
+.directory
+
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
+
+# .nfs files are created when an open file is removed but is still being accessed
+.nfs*
+
+# =============================================================================
+# APPLICATION SPECIFIC FILES
+# =============================================================================
+
+# --- Java Application Logs ---
+# Application specific log files
+application.log
+calculator.log
+error.log
+debug.log
+
+# Log4j specific
+log4j.properties.local
+log4j2.xml.local
+
+# --- Temporary Files ---
+# Temporary files created during development
+*.tmp
+*.temp
+*~
+.#*
+#*#
+
+# --- Configuration Files with Sensitive Data ---
+# Database configuration (if added later)
+database.properties
+db.properties
+
+# API keys and secrets (if added later)
+secrets.properties
+api-keys.properties
+.env
+.env.local
+.env.production
+
+# --- Test Coverage Reports ---
+# JaCoCo coverage reports
+jacoco.exec
+jacoco-it.exec
+
+# Cobertura coverage reports
+cobertura.ser
+
+# --- Documentation Build Files ---
+# Generated documentation
+docs/generated/
+javadoc/
+
+# --- Backup Files ---
+# Editor backup files
+*.bak
+*.backup
+*~
+
+# Version control backup files
+*.orig
+
+# =============================================================================
+# DEVELOPMENT TOOLS
+# =============================================================================
+
+# --- SonarQube ---
+.sonar/
+.scannerwork/
+
+# --- Checkstyle ---
+checkstyle-result.xml
+
+# --- SpotBugs ---
+spotbugs.xml
+
+# --- PMD ---
+pmd.xml
+
+# --- JProfiler ---
+*.jprofile
+
+# --- YourKit ---
+*.hprof
+
+# =============================================================================
+# DEPLOYMENT AND DISTRIBUTION
+# =============================================================================
+
+# --- Docker ---
+# Docker files (if containerization is added)
+Dockerfile.local
+docker-compose.override.yml
+.dockerignore.local
+
+# --- Kubernetes ---
+# Local Kubernetes configurations
+k8s-local/
+*.local.yaml
+
+# --- Distribution Archives ---
+# Distribution packages
+dist/
+build/
+release/
+
+# =============================================================================
+# CUSTOM PROJECT SPECIFIC
+# =============================================================================
+
+# --- Calculator Specific ---
+# Custom calculator configurations
+calculator.config
+user-preferences.properties
+
+# --- Test Data ---
+# Large test files or generated test data
+test-data/large/
+*.test-data
+
+# --- Performance Testing ---
+# Performance test results
+performance-results/
+*.perf
+
+# --- Documentation Drafts ---
+# Draft documentation files
+docs/drafts/
+*.draft.md
+
+# =============================================================================
+# SECURITY
+# =============================================================================
+
+# --- Certificates and Keys ---
+# SSL certificates and private keys
+*.pem
+*.key
+*.crt
+*.p12
+*.jks
+*.keystore
+*.truststore
+
+# --- Authentication ---
+# Authentication tokens
+.auth
+auth.json
+token.txt
+
+# =============================================================================
+# END OF .gitignore
+# =============================================================================
+
+# Note: This .gitignore is comprehensive for Java Maven projects.
+# Remove sections that are not applicable to your specific setup.
+# Add project-specific patterns as needed.
+
+# To check what files are being ignored:
+# git status --ignored
+
+# To force add an ignored file:
+# git add -f filename
+
+# To remove a file from tracking but keep it locally:
+# git rm --cached filename
