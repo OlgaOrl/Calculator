@@ -5,6 +5,8 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import com.calculator.validation.InputValidator;
+import com.calculator.validation.ValidationException;
 
 /**
  * A comprehensive calculator class providing mathematical operations,
@@ -69,8 +71,10 @@ public class Calculator {
         validateInput(a, "Dividend");
         validateInput(b, "Divisor");
         
-        if (b == 0.0) {
-            throw new DivisionByZeroException("Cannot divide " + a + " by zero");
+        try {
+            InputValidator.validateDivision(a, b);
+        } catch (ValidationException e) {
+            throw new DivisionByZeroException(e.getMessage());
         }
         
         double result = a / b;
@@ -90,8 +94,11 @@ public class Calculator {
     
     public double squareRoot(double number) throws InvalidInputException {
         validateInput(number, "Number");
-        if (number < 0) {
-            throw new InvalidInputException("Cannot calculate square root of negative number: " + number);
+        
+        try {
+            InputValidator.validateSquareRoot(number);
+        } catch (ValidationException e) {
+            throw new InvalidInputException(e.getMessage());
         }
         
         double result = Math.sqrt(number);
@@ -138,12 +145,10 @@ public class Calculator {
     }
     
     public long factorial(int number) throws InvalidInputException {
-        if (number < 0) {
-            throw new InvalidInputException("Factorial is not defined for negative numbers: " + number);
-        }
-        
-        if (number > 20) {
-            throw new InvalidInputException("Factorial calculation would overflow for number: " + number);
+        try {
+            InputValidator.validateFactorial(number);
+        } catch (ValidationException e) {
+            throw new InvalidInputException(e.getMessage());
         }
         
         long result = 1;
@@ -280,22 +285,16 @@ public class Calculator {
             return; // Skip validation if disabled
         }
         
-        if (Double.isNaN(value)) {
-            throw new InvalidInputException(parameterName + " cannot be NaN");
-        }
-        
-        if (Double.isInfinite(value)) {
-            throw new InvalidInputException(parameterName + " cannot be infinite");
-        }
-        
-        // Check configured value ranges
-        double maxValue = config.getMaxNumberValue();
-        double minValue = config.getMinNumberValue();
-        
-        if (value > maxValue || value < minValue) {
-            throw new InvalidInputException(String.format(
-                "%s value %.2f is outside allowed range [%.2e, %.2e]", 
-                parameterName, value, minValue, maxValue));
+        try {
+            InputValidator.validateSafeNumber(value);
+            
+            // Check configured value ranges
+            double maxValue = config.getMaxNumberValue();
+            double minValue = config.getMinNumberValue();
+            InputValidator.isValidRange(value, minValue, maxValue);
+            
+        } catch (ValidationException e) {
+            throw new InvalidInputException(parameterName + ": " + e.getMessage());
         }
     }
     
@@ -325,5 +324,35 @@ public class Calculator {
         return String.format("Calculator{memory=%.2f, history entries=%d}", 
                            memory, history.size());
     }
+}
+
+// Add logarithm method with validation
+public double logarithm(double number) throws InvalidInputException {
+    validateInput(number, "Number");
+    
+    try {
+        InputValidator.validateLogarithm(number);
+    } catch (ValidationException e) {
+        throw new InvalidInputException(e.getMessage());
+    }
+    
+    double result = Math.log10(number);
+    logCalculation("log(" + number + ") = " + formatResult(result));
+    return result;
+}
+
+// Add natural logarithm method with validation
+public double naturalLogarithm(double number) throws InvalidInputException {
+    validateInput(number, "Number");
+    
+    try {
+        InputValidator.validateLogarithm(number);
+    } catch (ValidationException e) {
+        throw new InvalidInputException(e.getMessage());
+    }
+    
+    double result = Math.log(number);
+    logCalculation("ln(" + number + ") = " + formatResult(result));
+    return result;
 }
 
