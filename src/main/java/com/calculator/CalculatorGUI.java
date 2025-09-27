@@ -30,6 +30,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.calculator.validation.InputValidator;
+import com.calculator.validation.ValidationException;
+
 public class CalculatorGUI extends JFrame implements ActionListener, KeyListener {
     
     private JTextField display;
@@ -316,16 +319,33 @@ public class CalculatorGUI extends JFrame implements ActionListener, KeyListener
     }
     
     private void handleNumber(String number) {
-        if (isNewCalculation) {
-            display.setText(number);
-            isNewCalculation = false;
-        } else {
-            String current = display.getText();
-            if (!current.equals("0")) {
-                display.setText(current + number);
-            } else {
+        try {
+            // Validate the number input
+            String currentDisplay = display.getText();
+            String newInput = isNewCalculation ? number : currentDisplay + number;
+            
+            // Sanitize and validate the input
+            String sanitizedInput = InputValidator.sanitizeInput(newInput);
+            InputValidator.validateWithConfig(sanitizedInput, calculator.getConfig());
+            
+            if (isNewCalculation) {
                 display.setText(number);
+                isNewCalculation = false;
+            } else {
+                String current = display.getText();
+                if (!current.equals("0")) {
+                    display.setText(current + number);
+                } else {
+                    display.setText(number);
+                }
             }
+            
+            updateStatusLabel("Valid input: " + number);
+            
+        } catch (ValidationException e) {
+            showValidationError("Invalid number input", e);
+        } catch (Exception e) {
+            showError("Input error: " + e.getMessage());
         }
     }
     
@@ -340,24 +360,40 @@ public class CalculatorGUI extends JFrame implements ActionListener, KeyListener
     }
     
     private void handleOperation(String op) {
-        if (!operation.isEmpty()) {
-            handleEquals();
+        try {
+            // Validate the operation
+            InputValidator.validateOperation(op);
+            
+            // Validate current display value
+            String currentValue = display.getText();
+            InputValidator.validateWithConfig(currentValue, calculator.getConfig());
+            
+            if (!operation.isEmpty()) {
+                handleEquals();
+            }
+            
+            firstNumber = Double.parseDouble(display.getText());
+            operation = op;
+            isNewCalculation = true;
+            
+            // Update operation display with simple symbols
+            String operationSymbol = switch (op) {
+                case "+" -> "+";
+                case "-" -> "-";
+                case "×" -> "×";
+                case "÷" -> "÷";
+                case "power" -> "^";
+                default -> op;
+            };
+            operationLabel.setText(calculator.formatResult(firstNumber) + " " + operationSymbol);
+            
+            updateStatusLabel("Operation selected: " + op);
+            
+        } catch (ValidationException e) {
+            showValidationError("Invalid operation", e);
+        } catch (Exception e) {
+            showError("Operation error: " + e.getMessage());
         }
-        
-        firstNumber = Double.parseDouble(display.getText());
-        operation = op;
-        isNewCalculation = true;
-        
-        // Update operation display with simple symbols
-        String operationSymbol = switch (op) {
-            case "+" -> "+";
-            case "-" -> "-";
-            case "×" -> "×";
-            case "÷" -> "÷";
-            case "power" -> "^";
-            default -> op;
-        };
-        operationLabel.setText(calculator.formatResult(firstNumber) + " " + operationSymbol);
     }
     
     private void handleEquals() {
@@ -644,21 +680,28 @@ public class CalculatorGUI extends JFrame implements ActionListener, KeyListener
         
         try {
             if (Character.isDigit(keyChar)) {
-                handleNumber(String.valueOf(keyChar));
+                // Validate digit input
+                String digitStr = String.valueOf(keyChar);
+                InputValidator.validateNumber(digitStr);
+                handleNumber(digitStr);
                 updateStatusLabel("Number entered: " + keyChar);
             } else if (keyChar == '.') {
                 handleDecimal();
                 updateStatusLabel("Decimal point added");
             } else if (keyChar == '+') {
+                InputValidator.validateOperation("+");
                 handleOperation("+");
                 updateStatusLabel("Operation: Addition");
             } else if (keyChar == '-') {
+                InputValidator.validateOperation("-");
                 handleOperation("-");
                 updateStatusLabel("Operation: Subtraction");
             } else if (keyChar == '*') {
+                InputValidator.validateOperation("×");
                 handleOperation("×");
                 updateStatusLabel("Operation: Multiplication");
             } else if (keyChar == '/') {
+                InputValidator.validateOperation("÷");
                 handleOperation("÷");
                 updateStatusLabel("Operation: Division");
             } else if (keyCode == KeyEvent.VK_ENTER) {
@@ -671,8 +714,10 @@ public class CalculatorGUI extends JFrame implements ActionListener, KeyListener
                 handleBackspace();
                 updateStatusLabel("Last digit deleted");
             }
-        } catch (Exception ex) {
-            showError(ex.getMessage());
+        } catch (ValidationException e) {
+            showValidationError("Keyboard Input Error", e);
+        } catch (Exception e) {
+            showError("Keyboard error: " + e.getMessage());
         }
     }
     
@@ -827,13 +872,141 @@ public class CalculatorGUI extends JFrame implements ActionListener, KeyListener
         JOptionPane.showMessageDialog(this, scrollPane, "Configuration", JOptionPane.INFORMATION_MESSAGE);
     }
     
+    private void showValidationError(String title, ValidationException e) {
+        StringBuilder message = new StringBuilder();
+        message.append("Validation Error: ").append(e.getMessage()).append("\n\n");
+        
+        if (e.getInvalidInput() != null) {
+            message.append("Invalid Input: '").append(e.getInvalidInput()).append("'\n");
+        }
+        
+        if (e.getViolatedRule() != null) {
+            message.append("Violated Rule: ").append(e.getViolatedRule()).append("\n");
+        }
+        
+        message.append("\nPlease check your input and try again.");
+        
+        JOptionPane.showMessageDialog(this, message.toString(), title, JOptionPane.WARNING_MESSAGE);
+        updateStatusLabel("Validation error: " + e.getViolatedRule());
+        statusLabel.setForeground(Color.ORANGE);
+    }
+    
+    private void createValidationMenu() {
+        JMenuBar menuBar = getJMenuBar();
+        if (menuBar == null) {
+            menuBar = new JMenuBar();
+            setJMenuBar(menuBar);
+        }
+        
+        JMenu validationMenu = new JMenu("Validation");
+        
+        JMenuItem testValidation = new JMenuItem("Test Input Validation");
+        testValidation.addActionListener(e -> showValidationTestDialog());
+        
+        JMenuItem validationSettings = new JMenuItem("Validation Settings");
+        validationSettings.addActionListener(e -> showValidationSettingsDialog());
+        
+        validationMenu.add(testValidation);
+        validationMenu.add(validationSettings);
+        menuBar.add(validationMenu);
+    }
+    
+    private void showValidationTestDialog() {
+        JDialog dialog = new JDialog(this, "Input Validation Test", true);
+        dialog.setLayout(new BorderLayout());
+        
+        JPanel inputPanel = new JPanel(new GridLayout(3, 2, 5, 5));
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        
+        JTextField numberField = new JTextField();
+        JTextField operationField = new JTextField();
+        JTextArea resultArea = new JTextArea(5, 30);
+        resultArea.setEditable(false);
+        resultArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        
+        inputPanel.add(new JLabel("Test Number:"));
+        inputPanel.add(numberField);
+        inputPanel.add(new JLabel("Test Operation:"));
+        inputPanel.add(operationField);
+        
+        JButton testButton = new JButton("Test Validation");
+        testButton.addActionListener(e -> {
+            StringBuilder results = new StringBuilder();
+            
+            // Test number validation
+            String numberInput = numberField.getText();
+            if (!numberInput.isEmpty()) {
+                try {
+                    double number = InputValidator.validateNumber(numberInput);
+                    results.append("✓ Number '").append(numberInput).append("' is valid: ").append(number).append("\n");
+                } catch (ValidationException ex) {
+                    results.append("✗ Number '").append(numberInput).append("' is invalid: ").append(ex.getMessage()).append("\n");
+                }
+            }
+            
+            // Test operation validation
+            String operationInput = operationField.getText();
+            if (!operationInput.isEmpty()) {
+                try {
+                    InputValidator.validateOperation(operationInput);
+                    results.append("✓ Operation '").append(operationInput).append("' is valid\n");
+                } catch (ValidationException ex) {
+                    results.append("✗ Operation '").append(operationInput).append("' is invalid: ").append(ex.getMessage()).append("\n");
+                }
+            }
+            
+            resultArea.setText(results.toString());
+        });
+        
+        inputPanel.add(testButton);
+        
+        dialog.add(inputPanel, BorderLayout.NORTH);
+        dialog.add(new JScrollPane(resultArea), BorderLayout.CENTER);
+        
+        JButton closeButton = new JButton("Close");
+        closeButton.addActionListener(e -> dialog.dispose());
+        
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(closeButton);
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
+        
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }
+    
+    private void showValidationSettingsDialog() {
+        CalculatorConfig config = calculator.getConfig();
+        StringBuilder info = new StringBuilder("Current Validation Settings:\n\n");
+        
+        info.append("Validation Enabled: ").append(config.isValidationEnabled()).append("\n");
+        info.append("Strict Mode: ").append(config.isStrictModeEnabled()).append("\n");
+        info.append("Max Number Value: ").append(config.getMaxNumberValue()).append("\n");
+        info.append("Min Number Value: ").append(config.getMinNumberValue()).append("\n");
+        info.append("Precision: ").append(config.getPrecision()).append("\n");
+        
+        info.append("\nValidation Features:\n");
+        info.append("• Number format validation\n");
+        info.append("• Range checking\n");
+        info.append("• Operation symbol validation\n");
+        info.append("• Expression syntax validation\n");
+        info.append("• Scientific notation support\n");
+        info.append("• Overflow/underflow detection\n");
+        info.append("• Input sanitization\n");
+        
+        JTextArea textArea = new JTextArea(info.toString());
+        textArea.setEditable(false);
+        textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setPreferredSize(new Dimension(500, 400));
+        
+        JOptionPane.showMessageDialog(this, scrollPane, "Validation Settings", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             new CalculatorGUI().setVisible(true);
         });
     }
 }
-
-
-
-
