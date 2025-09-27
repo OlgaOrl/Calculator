@@ -46,6 +46,8 @@ public class CalculatorGUI extends JFrame implements ActionListener, KeyListener
         initializeGUI();
         setupKeyboardShortcuts();
         createExportButton();
+        applyConfiguration();
+        createConfigurationMenu();
     }
     
     private void initializeGUI() {
@@ -739,6 +741,90 @@ public class CalculatorGUI extends JFrame implements ActionListener, KeyListener
             JOptionPane.showMessageDialog(this, "Export failed: " + ex.getMessage(), 
                                         "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+    
+    private void applyConfiguration() {
+        CalculatorConfig config = calculator.getConfig();
+        
+        // Apply window size from configuration
+        setSize(config.getWindowWidth(), config.getWindowHeight());
+        
+        // Apply theme settings
+        applyTheme(config.getTheme());
+        
+        // Configure keyboard shortcuts based on settings
+        if (config.isKeyboardShortcutsEnabled()) {
+            setupKeyboardShortcuts();
+        }
+        
+        // Update status label with configuration info
+        updateStatusLabel("Configuration loaded: " + config.toString());
+    }
+
+    private void applyTheme(String theme) {
+        Color backgroundColor;
+        Color foregroundColor;
+        
+        switch (theme.toLowerCase()) {
+            case "dark":
+                backgroundColor = new Color(30, 30, 30);
+                foregroundColor = Color.WHITE;
+                break;
+            case "light":
+                backgroundColor = Color.WHITE;
+                foregroundColor = Color.BLACK;
+                break;
+            default:
+                backgroundColor = new Color(45, 45, 45);
+                foregroundColor = Color.WHITE;
+        }
+        
+        // Apply theme colors to components
+        getContentPane().setBackground(backgroundColor);
+        display.setBackground(backgroundColor);
+        display.setForeground(foregroundColor);
+    }
+
+    private void createConfigurationMenu() {
+        JMenuBar menuBar = new JMenuBar();
+        JMenu configMenu = new JMenu("Configuration");
+        
+        JMenuItem reloadConfig = new JMenuItem("Reload Configuration");
+        reloadConfig.addActionListener(e -> {
+            calculator.getConfig().reloadConfiguration();
+            applyConfiguration();
+            JOptionPane.showMessageDialog(this, "Configuration reloaded successfully!");
+        });
+        
+        JMenuItem showConfig = new JMenuItem("Show Configuration");
+        showConfig.addActionListener(e -> showConfigurationDialog());
+        
+        configMenu.add(reloadConfig);
+        configMenu.add(showConfig);
+        menuBar.add(configMenu);
+        
+        setJMenuBar(menuBar);
+    }
+
+    private void showConfigurationDialog() {
+        CalculatorConfig config = calculator.getConfig();
+        StringBuilder info = new StringBuilder("Current Configuration:\n\n");
+        
+        info.append("Precision: ").append(config.getPrecision()).append("\n");
+        info.append("Max History: ").append(config.getMaxHistoryEntries()).append("\n");
+        info.append("Theme: ").append(config.getTheme()).append("\n");
+        info.append("Auto Save: ").append(config.isAutoSaveEnabled()).append("\n");
+        info.append("Validation: ").append(config.isValidationEnabled()).append("\n");
+        info.append("Export Format: ").append(config.getDefaultExportFormat()).append("\n");
+        
+        JTextArea textArea = new JTextArea(info.toString());
+        textArea.setEditable(false);
+        textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setPreferredSize(new Dimension(400, 300));
+        
+        JOptionPane.showMessageDialog(this, scrollPane, "Configuration", JOptionPane.INFORMATION_MESSAGE);
     }
     
     public static void main(String[] args) {

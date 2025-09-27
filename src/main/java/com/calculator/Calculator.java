@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * A comprehensive calculator class providing mathematical operations,
@@ -12,10 +13,29 @@ import java.util.List;
 public class Calculator {
     private double memory = 0.0;
     private List<String> history = new ArrayList<>();
+    private static final Logger LOGGER = Logger.getLogger(Calculator.class.getName());
+    private CalculatorConfig config;
     
     // Mathematical constants
     public static final double PI = Math.PI;
     public static final double E = Math.E;
+    
+    public Calculator() {
+        this.config = CalculatorConfig.getInstance();
+        this.memory = 0.0;
+        this.history = new ArrayList<>();
+        
+        // Apply configuration settings
+        if (config.isMemoryAutoClearOnStartup()) {
+            memoryClear();
+        }
+        
+        if (config.isHistoryClearOnStartup()) {
+            clearHistory();
+        }
+        
+        LOGGER.info("Calculator initialized with configuration: " + config.toString());
+    }
     
     // Basic arithmetic operations
     public double add(double a, double b) throws InvalidInputException {
@@ -241,18 +261,63 @@ public class Calculator {
         } else if (isInteger(result)) {
             return String.valueOf((long) result);
         } else {
-            return String.valueOf(result);
+            // Use configured precision
+            int precision = config.getPrecision();
+            String format = String.format("%%.%df", precision);
+            String formatted = String.format(format, result);
+            
+            // Remove trailing zeros if not in strict mode
+            if (!config.isStrictModeEnabled()) {
+                formatted = formatted.replaceAll("0*$", "").replaceAll("\\.$", "");
+            }
+            
+            return formatted;
         }
     }
     
     private void validateInput(double value, String parameterName) throws InvalidInputException {
+        if (!config.isValidationEnabled()) {
+            return; // Skip validation if disabled
+        }
+        
         if (Double.isNaN(value)) {
             throw new InvalidInputException(parameterName + " cannot be NaN");
+        }
+        
+        if (Double.isInfinite(value)) {
+            throw new InvalidInputException(parameterName + " cannot be infinite");
+        }
+        
+        // Check configured value ranges
+        double maxValue = config.getMaxNumberValue();
+        double minValue = config.getMinNumberValue();
+        
+        if (value > maxValue || value < minValue) {
+            throw new InvalidInputException(String.format(
+                "%s value %.2f is outside allowed range [%.2e, %.2e]", 
+                parameterName, value, minValue, maxValue));
         }
     }
     
     private void logCalculation(String calculation) {
         history.add(calculation);
+        
+        // Respect maximum history entries from configuration
+        int maxEntries = config.getMaxHistoryEntries();
+        while (history.size() > maxEntries) {
+            history.remove(0); // Remove oldest entry
+        }
+        
+        LOGGER.fine("Calculation logged: " + calculation);
+    }
+    
+    /**
+     * Gets the configuration instance used by this calculator.
+     * 
+     * @return the CalculatorConfig instance
+     */
+    public CalculatorConfig getConfig() {
+        return config;
     }
     
     @Override
@@ -261,7 +326,4 @@ public class Calculator {
                            memory, history.size());
     }
 }
-
-
-
 
