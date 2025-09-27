@@ -16,6 +16,7 @@ import javax.swing.BorderFactory;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -27,6 +28,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class CalculatorGUI extends JFrame implements ActionListener, KeyListener {
     
@@ -43,6 +45,7 @@ public class CalculatorGUI extends JFrame implements ActionListener, KeyListener
         calculator = new Calculator();
         initializeGUI();
         setupKeyboardShortcuts();
+        createExportButton();
     }
     
     private void initializeGUI() {
@@ -711,12 +714,40 @@ public class CalculatorGUI extends JFrame implements ActionListener, KeyListener
         // Not used but required by KeyListener interface
     }
     
+    private void createExportButton() {
+        JButton exportButton = new JButton("Export CSV");
+        exportButton.setFont(new Font("Arial", Font.PLAIN, 12));
+        exportButton.addActionListener(e -> exportHistoryToCSV());
+        
+        // Add to button panel
+        JPanel exportPanel = new JPanel();
+        exportPanel.add(exportButton);
+        add(exportPanel, BorderLayout.SOUTH);
+    }
+
+    private void exportHistoryToCSV() {
+        try {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileFilter(new FileNameExtensionFilter("CSV Files", "csv"));
+            fileChooser.setSelectedFile(new java.io.File(CSVExporter.generateFilename()));
+            
+            if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                CSVExporter.exportToCSV(calculator.getHistory(), fileChooser.getSelectedFile().getAbsolutePath());
+                JOptionPane.showMessageDialog(this, "History exported successfully!");
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Export failed: " + ex.getMessage(), 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             new CalculatorGUI().setVisible(true);
         });
     }
 }
+
 
 
 
