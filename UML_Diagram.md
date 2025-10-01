@@ -1,181 +1,149 @@
-# UML Class Diagram - Calculator System
+# UML Class Diagram
 
-## System Architecture Overview
+## Calculator System Architecture
 
-This document presents the UML class diagram for the Calculator application, demonstrating object-oriented design principles and class relationships.
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                           Calculator                            │
+├─────────────────────────────────────────────────────────────────┤
+│ - memory: double                                                │
+│ - history: List<String>                                         │
+│ + PI: static final double                                       │
+│ + E: static final double                                        │
+├─────────────────────────────────────────────────────────────────┤
+│ + add(double a, double b): double                               │
+│ + subtract(double a, double b): double                          │
+│ + multiply(double a, double b): double                          │
+│ + divide(double a, double b): double                            │
+│ + power(double base, double exponent): double                   │
+│ + squareRoot(double number): double                             │
+│ + cubeRoot(double number): double                               │
+│ + memoryStore(double value): void                               │
+│ + memoryRecall(): double                                        │
+│ + memoryClear(): void                                           │
+│ + getHistory(): List<String>                                    │
+│ + formatResult(double result): String                           │
+│ - validateInput(double value, String parameterName): void       │
+└─────────────────────────────────────────────────────────────────┘
+                                    │
+                                    │ composition
+                    ┌───────────────┼───────────────┐
+                    │               │               │
+                    ▼               ▼               ▼
+    ┌─────────────────────┐ ┌─────────────────┐ ┌─────────────────┐
+    │   CalculatorGUI     │ │  CalculatorCLI  │ │   HelpTopic     │
+    ├─────────────────────┤ ├─────────────────┤ ├─────────────────┤
+    │ - display: JTextField│ │ - calculator:   │ │ <<utility>>     │
+    │ - operationLabel:   │ │   Calculator    │ │                 │
+    │   JLabel            │ │ - scanner:      │ │                 │
+    │ - memoryLabel:      │ │   Scanner       │ │                 │
+    │   JLabel            │ ├─────────────────┤ ├─────────────────┤
+    │ - calculator:       │ │ + run(): void   │ │ + getKeyboard   │
+    │   Calculator        │ │ - performBasic  │ │   Shortcuts():  │
+    │ - firstNumber:      │ │   Calculation() │ │   String        │
+    │   double            │ │   : void        │ │ + getOperation  │
+    │ - operation: String │ │ + main(String[] │ │   Guide():      │
+    │ - isNewCalculation: │ │   args): void   │ │   String        │
+    │   boolean           │ └─────────────────┘ └─────────────────┘
+    ├─────────────────────┤           │                   ▲
+    │ + actionPerformed   │           │                   │
+    │   (ActionEvent): void│          │                   │ uses
+    │ + keyPressed        │           │                   │
+    │   (KeyEvent): void  │           │                   │
+    │ - handleNumber      │           │         ┌─────────┘
+    │   (String): void    │           │         │
+    │ - handleOperation   │           │         │
+    │   (String): void    │           │         │
+    │ - handleEquals():   │           │         │
+    │   void              │           │         │
+    │ - updateMemory      │           │         │
+    │   Display(): void   │           │         │
+    └─────────────────────┘           │         │
+              │                       │         │
+              │ uses                  │         │
+              │                       │         │
+              ▼                       ▼         │
+    ┌─────────────────────┐           │         │
+    │  ActionListener     │           │         │
+    │  KeyListener        │           │         │
+    │  <<interface>>      │           │         │
+    └─────────────────────┘           │         │
+                                      │         │
+                                      ▼         │
+                              ┌─────────────────┴─────┐
+                              │                       │
+                              ▼                       ▼
 
-## Class Diagram
+┌─────────────────────────────────────────────────────────────────┐
+│                    Exception Hierarchy                         │
+└─────────────────────────────────────────────────────────────────┘
 
-```mermaid
-classDiagram
-    class Calculator {
-        -double memory
-        -List~String~ history
-        +static final double PI
-        +static final double E
-        
-        +double add(double a, double b)
-        +double subtract(double a, double b)
-        +double multiply(double a, double b)
-        +double divide(double a, double b)
-        +double power(double base, double exponent)
-        +double squareRoot(double number)
-        +double cubeRoot(double number)
-        +long factorial(int number)
-        +double reciprocal(double number)
-        
-        +void memoryStore(double value)
-        +double memoryRecall()
-        +void memoryClear()
-        +void memoryAdd(double value)
-        +void memorySubtract(double value)
-        +boolean hasMemoryValue()
-        
-        +List~String~ getHistory()
-        +void clearHistory()
-        +String getLastCalculation()
-        +String formatResult(double result)
-        -void validateInput(double value, String parameterName)
-        -void logCalculation(String calculation)
-    }
+                    ┌─────────────────────────┐
+                    │  CalculatorException    │
+                    │     <<abstract>>        │
+                    ├─────────────────────────┤
+                    │ + CalculatorException   │
+                    │   (String message)      │
+                    └─────────────────────────┘
+                                │
+                                │ inheritance
+                    ┌───────────┼───────────┐
+                    │           │           │
+                    ▼           ▼           ▼
+        ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
+        │ DivisionByZero  │ │ InvalidInput    │ │   (Future       │
+        │   Exception     │ │   Exception     │ │  Extensions)    │
+        ├─────────────────┤ ├─────────────────┤ ├─────────────────┤
+        │ + DivisionBy    │ │ + InvalidInput  │ │ + Overflow      │
+        │   ZeroException │ │   Exception     │ │   Exception     │
+        │   (String       │ │   (String       │ │ + Underflow     │
+        │   message)      │ │   message)      │ │   Exception     │
+        └─────────────────┘ └─────────────────┘ └─────────────────┘
 
-    class CalculatorGUI {
-        -JTextField display
-        -JLabel operationLabel
-        -JLabel memoryLabel
-        -JLabel statusLabel
-        -Calculator calculator
-        -double firstNumber
-        -String operation
-        -boolean isNewCalculation
-        
-        +void actionPerformed(ActionEvent e)
-        +void keyPressed(KeyEvent e)
-        +void keyReleased(KeyEvent e)
-        +void keyTyped(KeyEvent e)
-        
-        -void initializeGUI()
-        -void setupKeyboardShortcuts()
-        -JPanel createDisplayPanel()
-        -JPanel createButtonPanel()
-        -JButton createButton(String text)
-        -void handleNumber(String number)
-        -void handleOperation(String op)
-        -void handleEquals()
-        -void handleClear()
-        -void handleMemoryOperation(String command)
-        -void updateMemoryDisplay()
-        -void showHelp()
-        -void showHistory()
-        -void updateStatusLabel(String message)
-    }
-
-    class CalculatorCLI {
-        -Calculator calculator
-        -Scanner scanner
-        
-        +void run()
-        -void performBasicCalculation()
-        +static void main(String[] args)
-    }
-
-    class CalculatorException {
-        <<abstract>>
-        +CalculatorException(String message)
-    }
-
-    class DivisionByZeroException {
-        +DivisionByZeroException(String message)
-    }
-
-    class InvalidInputException {
-        +InvalidInputException(String message)
-    }
-
-    class HelpTopic {
-        +static String getKeyboardShortcuts()
-        +static String getOperationGuide()
-        +static String getMemoryHelp()
-    }
-
-    %% Relationships
-    Calculator ||--o{ CalculatorGUI : composition
-    Calculator ||--o{ CalculatorCLI : composition
-    CalculatorException <|-- DivisionByZeroException : inheritance
-    CalculatorException <|-- InvalidInputException : inheritance
-    Calculator ..> CalculatorException : throws
-    CalculatorGUI ..> HelpTopic : dependency
-    CalculatorGUI ..|> ActionListener : implements
-    CalculatorGUI ..|> KeyListener : implements
+RELATIONSHIP LEGEND:
+═══════════════════
+│ Composition    : Strong "has-a" relationship (filled diamond)
+│ Inheritance    : "is-a" relationship (hollow triangle)  
+│ Dependency     : "uses" relationship (dashed arrow)
+│ Implementation : Interface implementation (dashed line with triangle)
 ```
 
-## Class Relationships Analysis
+## Class Relationships
 
-### 1. Composition Relationships
-- **CalculatorGUI** ◆→ **Calculator**: Strong "has-a" relationship
-- **CalculatorCLI** ◆→ **Calculator**: Strong "has-a" relationship
-- Both GUI and CLI cannot exist without Calculator instance
+### Composition Relationships
+- **CalculatorGUI** ◆→ **Calculator**: GUI contains Calculator instance
+- **CalculatorCLI** ◆→ **Calculator**: CLI contains Calculator instance
+- Both GUI and CLI cannot exist without Calculator (strong ownership)
 
-### 2. Inheritance Hierarchy
+### Inheritance Hierarchy
 ```
-CalculatorException (Abstract)
-├── DivisionByZeroException
-└── InvalidInputException
+Exception
+└── CalculatorException (Abstract)
+    ├── DivisionByZeroException
+    └── InvalidInputException
 ```
 - Demonstrates **polymorphism** in exception handling
 - Follows **Liskov Substitution Principle**
 
-### 3. Interface Implementation
+### Interface Implementation
 - **CalculatorGUI** implements **ActionListener** and **KeyListener**
 - Demonstrates **Interface Segregation Principle**
 
-### 4. Dependency Relationships
-- **Calculator** depends on **CalculatorException** subtypes
-- **CalculatorGUI** depends on **HelpTopic** for help system
+### Dependency Relationships
+- **Calculator** depends on **CalculatorException** subtypes (throws)
+- **CalculatorGUI** depends on **HelpTopic** for help system (uses)
 
-## Design Principles Demonstrated
+## Design Patterns Used
 
-### SOLID Principles
+1. **Model-View-Controller (MVC)**
+   - Model: `Calculator` (business logic)
+   - View: `CalculatorGUI`, `CalculatorCLI` (presentation)
+   - Controller: Event handlers in GUI/CLI
 
-1. **Single Responsibility Principle (SRP)**
-   - `Calculator`: Mathematical operations and memory management
-   - `CalculatorGUI`: User interface and event handling
-   - `CalculatorCLI`: Command-line interface
-   - Each exception class: Specific error type
+2. **Strategy Pattern**
+   - Different operation strategies (add, subtract, multiply, divide)
+   - Encapsulated in Calculator methods
 
-2. **Open/Closed Principle (OCP)**
-   - Easy to add new operations without modifying existing code
-   - Exception hierarchy allows new exception types
-
-3. **Liskov Substitution Principle (LSP)**
-   - All exception subtypes can replace `CalculatorException`
-   - Polymorphic exception handling
-
-4. **Interface Segregation Principle (ISP)**
-   - Separate interfaces for different event types
-   - GUI implements only needed listener interfaces
-
-5. **Dependency Inversion Principle (DIP)**
-   - GUI depends on Calculator abstraction
-   - High-level modules don't depend on low-level details
-
-## Object-Oriented Features
-
-### Encapsulation
-- Private fields with public methods
-- Data hiding in Calculator class
-- Controlled access to memory and history
-
-### Inheritance
-- Exception hierarchy with specialized error types
-- Code reuse through inheritance
-
-### Polymorphism
-- Method overloading in Calculator operations
-- Interface implementation in GUI
-- Exception handling polymorphism
-
-### Abstraction
-- Abstract CalculatorException class
-- Interface-based event handling
-- Clean separation of concerns
+3. **Observer Pattern**
+   - GUI components observe user input events
+   - ActionListener and KeyListener implementations
